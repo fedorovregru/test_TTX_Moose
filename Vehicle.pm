@@ -2,19 +2,11 @@ package Vehicle;
 
 use Moose;
 
-has 'model_name'     => ( is  => 'r', isa => 'Str' );
-has 'armor_thikness' => ( is  => 'r', isa => 'Num' );
+has 'model_name'     => ( is  => 'ro', isa => 'Str' );
+has 'armor_thikness' => ( is  => 'ro', isa => 'Num' );
 
 has 'speed'          => ( is  => 'rw', isa => 'Num' );
 has 'durability'     => ( is  => 'rw', isa => 'Num' );
-
-after 'new' => sub {
-    return 1;
-};
-
-sub moving {
-    return 1;
-};
 
 sub destroy {
     return 1;
