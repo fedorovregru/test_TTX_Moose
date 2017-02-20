@@ -9,6 +9,8 @@ has 'speed'          => ( is => 'rw', isa => 'Num' );
 has 'durability'     => ( is => 'rw', isa => 'Num' );
 
 sub destroy {
+	my ( $self ) = @_;
+	
     print 'уничтожен';
     $self->SUPER::DEMOLISH;
 };
@@ -22,5 +24,4 @@ sub get_damage {
     $self->destroy if $self->durability <= 0;
 };
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+return 1;

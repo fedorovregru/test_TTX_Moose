@@ -13,3 +13,5 @@ sub fly {
 sub sail {
     print 'приплыл';
 };
+
+return 1;

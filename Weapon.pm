@@ -17,3 +17,5 @@ sub shot {
 	$self->ammo_count( $self->ammo_count - 1 );
 	print 'выстрелил';
 }
+
+return 1;
