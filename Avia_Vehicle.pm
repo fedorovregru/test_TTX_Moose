@@ -1,22 +1,18 @@
 package Avia_Vehicle;
 
 use Moose;
-use Rocket;
-use Machine_Gun;
 extends 'Vehicle';
 with 'Mobile';
 
-has 'rockets'     => {
-	is      => 'ro',
-	default => sub { return Rocket->new( ammo_type => 'Ракета',
-		                                 ammo_count => 5 ); }
-};
+has 'rockets'     => (
+	is  => 'ro',
+	isa => 'Rocket'
+);
 
-has 'machine_gun' => {
-	is      => 'ro',
-	default => sub { return Machine_Gun->new( ammo_type => 'Патрон',
-		                                      ammo_count => 1000 ); }
-};
+has 'machine_gun' => (
+	is  => 'ro',
+	isa => 'Machine_Gun'
+);
 
 after 'new' => sub {
     my ( $self ) = @_;

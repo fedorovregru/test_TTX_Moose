@@ -5,7 +5,7 @@ use Moose;
 has 'ammo_type'  => ( is => 'ro', isa => 'Str' );
 has 'ammo_count' => ( is => 'rw', isa => 'Num' );
 
-sub aiming {
+sub aim {
 	print 'прицелился';
 }
 

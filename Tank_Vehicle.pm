@@ -1,23 +1,19 @@
 package Tank_Vehicle;
 
 use Moose;
-use Cannon;
-use Machine_Gun;
 extends 'Vehicle';
 with 'Mobile';
 
 
-has 'main_cannon' => {
-	is      => 'ro',
-	default => sub { return Cannon->new( ammo_type => 'Снаряд',
-		                                 ammo_count => 30 ); }	
-};
+has 'main_cannon' => (
+	is  => 'ro',
+    isa => 'Cannon'
+);
 
-has 'machine_gun' => {
-	is      => 'ro',
-	default => sub { return Machine_Gun->new( ammo_type => 'Патрон',
-		                                      ammo_count => 1000 ); }
-};
+has 'machine_gun' => (
+	is  => 'ro',
+	isa => 'Machine_Gun'
+);
 
 
 after 'new' => sub {

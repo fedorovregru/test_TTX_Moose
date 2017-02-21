@@ -1,22 +1,18 @@
 package Ship_Vehicle;
 
 use Moose;
-use Cannon;
-use Torpedo;
 extends 'Vehicle';
 with 'Mobile';
 
-has 'main_cannon' => {
-	is      => 'ro',
-    default => sub { return Cannon->new( ammo_type => 'Снаряд',
-		                                 ammo_count => 100 ); }	
-};
+has 'main_cannon' => (
+	is  => 'ro',
+    isa => 'Cannon'
+);
 
-has 'torpedo' => {
-	is      => 'ro',
-    default => sub { return Torpedo->new( ammo_type => 'Торпеда',
-		                                  ammo_count => 8 ); }	
-};
+has 'torpedo' => (
+	is  => 'ro',
+    isa => 'Torpedo'
+);
 
 after 'new' => sub {
     my ( $self ) = @_;

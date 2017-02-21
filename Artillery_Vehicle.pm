@@ -1,15 +1,13 @@
 package Artillery_Vehicle;
 
 use Moose;
-use Cannon;
 extends 'Vehicle';
 with 'Mobile';
 
-has 'cannon' => {
-	is      => 'ro',
-    default => sub { return Cannon->new( ammo_type => 'Снаряд',
-		                                 ammo_count => 100 ); }	
-};
+has 'cannon' => (
+	is  => 'ro',
+    isa => 'Cannon'
+);
 
 after 'new' => sub {
     my ( $self ) = @_;
