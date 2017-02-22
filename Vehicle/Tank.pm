@@ -1,5 +1,5 @@
 # класс танковая техника
-package Vehicle_tank;
+package Tank;
 
 use Moose;
 extends 'Vehicle';
@@ -8,12 +8,12 @@ with 'Mobile';
 
 has 'main_cannon' => (
 	is  => 'ro',
-    isa => 'Weapon_cannon'
+    isa => 'Cannon'
 );
 
 has 'machine_gun' => (
 	is  => 'ro',
-	isa => 'Weapon_machinegun'
+	isa => 'Machinegun'
 );
 
 

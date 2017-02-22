@@ -1,5 +1,5 @@
 # класс артиллерийская техника
-package Vehicle_artillery;
+package Artillery;
 
 use Moose;
 extends 'Vehicle';
@@ -7,7 +7,7 @@ with 'Mobile';
 
 has 'cannon' => (
 	is  => 'ro',
-    isa => 'Weapon_cannon'
+    isa => 'Cannon'
 );
 
 after 'new' => sub {

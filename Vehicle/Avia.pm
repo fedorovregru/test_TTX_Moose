@@ -1,5 +1,5 @@
 # класс авиа техника
-package Vehicle_avia;
+package Avia;
 
 use Moose;
 extends 'Vehicle';
@@ -7,12 +7,12 @@ with 'Mobile';
 
 has 'rockets'     => (
 	is  => 'ro',
-	isa => 'Weapon_rocket'
+	isa => 'Rocket'
 );
 
 has 'machine_gun' => (
 	is  => 'ro',
-	isa => 'Weapon_machinegun'
+	isa => 'Machinegun'
 );
 
 after 'new' => sub {

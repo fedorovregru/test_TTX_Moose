@@ -1,5 +1,5 @@
 # класс оружие ракета
-package Weapon_rocket;
+package Rocket;
 
 use Moose;
 extends 'Weapon';

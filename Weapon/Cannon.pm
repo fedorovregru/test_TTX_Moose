@@ -1,5 +1,5 @@
 # класс оружие пушка
-package Weapon_cannon;
+package Cannon;
 
 use Moose;
 extends 'Weapon';

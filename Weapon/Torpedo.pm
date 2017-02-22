@@ -1,5 +1,5 @@
 # класс оружие торпеда
-package Weapon_torpedo;
+package Torpedo;
 
 use Moose;
 extends 'Weapon';

@@ -3,21 +3,21 @@
 use Modern::Perl;
 use Data::Dumper;
 
-use Vehicle_tank;
-use Cannon;
-use Machine_Gun;
+use Vehicle::Tank;
+use Weapon::Cannon;
+use Weapon::Machinegun;
 
 # тестовый прогон танка
 
-my $tank_01 = Vehicle_tank->new(
+my $tank_01 = Tank->new(
     
-    main_cannon    => Cannon->new( ammo_type =>  'Снаряд',
+    main_cannon    => Cannon->new( ammo_type  => 'Снаряд',
                                    ammo_count => 25 ),
     
-    machine_gun    => Machine_Gun->new( ammo_type       =>  'Патрон',
-                                        ammo_count      => 2000,
-                                        magazine        => 30,
-                                        bullets_counter => 30 ),
+    machine_gun    => Machinegun->new( ammo_type       =>  'Патрон',
+                                       ammo_count      => 2000,
+                                       magazine        => 30,
+                                       bullets_counter => 30 ),
     
     model_name     => 'Т-110',
     armor_thikness => 280,

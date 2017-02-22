@@ -1,5 +1,5 @@
 # класс корабельная техника
-package Vehicle_ship;
+package Ship;
 
 use Moose;
 extends 'Vehicle';
@@ -7,12 +7,12 @@ with 'Mobile';
 
 has 'main_cannon' => (
 	is  => 'ro',
-    isa => 'Weapon_cannon'
+    isa => 'Cannon'
 );
 
 has 'torpedo' => (
 	is  => 'ro',
-    isa => 'Weapon_torpedo'
+    isa => 'Torpedo'
 );
 
 after 'new' => sub {

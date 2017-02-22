@@ -13,7 +13,6 @@ sub destroy {
 	my ( $self ) = @_;
 	
     print 'уничтожен';
-    $self->SUPER::DEMOLISH;
 };
 
 sub get_damage {
