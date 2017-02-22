@@ -1,3 +1,4 @@
+# роль передвижения для техники
 package Mobile;
 
 use Moose::Role;

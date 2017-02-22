@@ -3,11 +3,13 @@
 use Modern::Perl;
 use Data::Dumper;
 
-use Tank_Vehicle;
+use Vehicle_tank;
 use Cannon;
 use Machine_Gun;
 
-my $tank_01 = Tank_Vehicle->new(
+# тестовый прогон танка
+
+my $tank_01 = Vehicle_tank->new(
     
     main_cannon    => Cannon->new( ammo_type =>  'Снаряд',
                                    ammo_count => 25 ),

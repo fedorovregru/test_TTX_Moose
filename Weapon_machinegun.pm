@@ -1,4 +1,5 @@
-package Machine_Gun;
+# класс оружие пулемет
+package Weapon_machinegun;
 
 use Moose;
 extends 'Weapon';

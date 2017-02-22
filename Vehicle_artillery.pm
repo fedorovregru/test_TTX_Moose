@@ -1,4 +1,5 @@
-package Artillery_Vehicle;
+# класс артиллерийская техника
+package Vehicle_artillery;
 
 use Moose;
 extends 'Vehicle';
@@ -6,7 +7,7 @@ with 'Mobile';
 
 has 'cannon' => (
 	is  => 'ro',
-    isa => 'Cannon'
+    isa => 'Weapon_cannon'
 );
 
 after 'new' => sub {

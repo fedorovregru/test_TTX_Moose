@@ -1,4 +1,5 @@
-package Ship_Vehicle;
+# класс корабельная техника
+package Vehicle_ship;
 
 use Moose;
 extends 'Vehicle';
@@ -6,12 +7,12 @@ with 'Mobile';
 
 has 'main_cannon' => (
 	is  => 'ro',
-    isa => 'Cannon'
+    isa => 'Weapon_cannon'
 );
 
 has 'torpedo' => (
 	is  => 'ro',
-    isa => 'Torpedo'
+    isa => 'Weapon_torpedo'
 );
 
 after 'new' => sub {

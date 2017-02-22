@@ -1,3 +1,4 @@
+# класс оружие
 package Weapon;
 
 use Moose;

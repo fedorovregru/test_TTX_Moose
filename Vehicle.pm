@@ -1,3 +1,4 @@
+# класс техника
 package Vehicle;
 
 use Moose;
