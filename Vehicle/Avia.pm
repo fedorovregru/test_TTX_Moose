@@ -35,7 +35,7 @@ after 'get_damage' => sub {
 };
 
 # перед попыткой поплыть или поехать - уничтожаемся
-before 'sail' => sub {
+before [qw( move sail )] => sub {
 	
     my ( $self ) = @_;
     
