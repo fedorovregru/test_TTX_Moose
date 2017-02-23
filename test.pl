@@ -28,11 +28,11 @@ my $tank_01 = Tank->new(
 print Dumper $tank_01;
 
 for my $i (0..21) {
-    $tank_01->main_cannon->shot;
+    $tank_01->cannon_fire;
 }
 
 for my $i (0..1554) {
-    $tank_01->machine_gun->shot;
+    $tank_01->mg_fire;
 }
 
 print Dumper $tank_01;

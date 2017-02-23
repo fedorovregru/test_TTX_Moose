@@ -4,6 +4,7 @@ package Cannon;
 use Moose;
 extends 'Weapon';
 
+# перезаряжаемся после выстрела
 after 'shot' => sub {
     my ( $self ) = @_;
     $self->reload;

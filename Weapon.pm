@@ -6,10 +6,12 @@ use Moose;
 has 'ammo_type'  => ( is => 'ro', isa => 'Str' );
 has 'ammo_count' => ( is => 'rw', isa => 'Num' );
 
+# прицеливаемся
 sub aim {
 	print 'прицелился';
 }
 
+# стреляем
 sub shot {
 	my ( $self ) = @_;
 	
