@@ -39,7 +39,7 @@ before [qw( move sail )] => sub {
 	
     my ( $self ) = @_;
     
-    print 'Самолет утонул!';
+    print 'Самолет разбился!';
     $self->destroy;
 };
 
