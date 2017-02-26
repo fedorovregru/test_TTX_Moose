@@ -8,7 +8,7 @@ with 'Mobile';
 has 'main_cannon' => (
 	is      => 'ro',
     isa     => 'Cannon',
-    handles => { cannon_fire => 'shot' }
+    handles => { fire_cannon => 'shot' }
 );
 
 has 'torpedo' => (
@@ -23,20 +23,18 @@ after 'new' => sub {
     $self->out_to_sea;
 };
 
-# рассчет критического попадания при получении урона
-after 'get_damage' => sub {
-	
+# рассчет критического попадания перед получением урона
+before 'get_damage' => sub {
     my ( $self ) = @_;
 	
-    if ( int( rand(100) ) < 11 ) {
+    if ( $self->is_get_critical_damage ) {
         print 'Пробоина ниже ватерлинии!';
-        $self->destroy;
+        $self->durability = 0;
     }
 };
 
-# при попытке поехать или полететь уничтожаем корабль
-before [qw( move fly )] => sub {
-	
+# после попытки поехать или полететь уничтожаем корабль
+after [qw( move fly )] => sub {
     my ( $self ) = @_;
     
     print 'Корабли не летают и не ездят по суше!';
@@ -45,6 +43,8 @@ before [qw( move fly )] => sub {
 
 sub out_to_sea {
     print 'вышел в море';
+    return 1;
 };
 
-return 1;
+no Moose;
+__PACKAGE__->meta->make_immutable;

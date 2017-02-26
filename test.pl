@@ -16,8 +16,7 @@ my $tank_01 = Tank->new(
     
     machine_gun    => Machinegun->new( ammo_type       =>  'Патрон',
                                        ammo_count      => 2000,
-                                       magazine        => 30,
-                                       bullets_counter => 30 ),
+                                       magazine_size   => 30 ),
     
     model_name     => 'Т-110',
     armor_thikness => 280,
@@ -28,11 +27,11 @@ my $tank_01 = Tank->new(
 print Dumper $tank_01;
 
 for my $i (0..21) {
-    $tank_01->cannon_fire;
+    $tank_01->fire_cannon;
 }
 
 for my $i (0..1554) {
-    $tank_01->mg_fire;
+    $tank_01->fire_machinegun;
 }
 
 print Dumper $tank_01;

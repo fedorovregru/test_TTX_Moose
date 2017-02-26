@@ -9,13 +9,13 @@ with 'Mobile';
 has 'main_cannon' => (
 	is      => 'ro',
     isa     => 'Cannon',
-    handles => { cannon_fire => 'shot' }
+    handles => { fire_cannon => 'shot' }
 );
 
 has 'machine_gun' => (
 	is      => 'ro',
 	isa     => 'Machinegun',
-	handles => { mg_fire => 'shot' }
+	handles => { fire_machinegun => 'shot' }
 );
 
 # после создания выходим на позицию
@@ -24,20 +24,18 @@ after 'new' => sub {
     $self->go_to_tanks_position;
 };
 
-# рассчет критического попадания при получении урона
-after 'get_damage' => sub {
-	
+# рассчет критического попадания перед получением урона
+before 'get_damage' => sub {
     my ( $self ) = @_;
     
-    if ( int( rand(100) ) < 11 ) {  
+    if ( $self->is_get_critical_damage ) {  
         print 'Сдетонировал боекомплект!';
-        $self->destroy;
+        $self->durability = 0;
     }
 };
 
-# перед попыткой полететь или поплыть уничтожаем танк
-before [qw( fly sail )] => sub {
-	
+# после попытки полететь или поплыть уничтожаем танк
+after [qw( fly sail )] => sub {
     my ( $self ) = @_;
     
     print 'Танки не летают и не плавают!';
@@ -46,6 +44,8 @@ before [qw( fly sail )] => sub {
 
 sub go_to_tanks_position {
     print 'вышел на позицию';
+    return 1;
 };
 
-return 1;
+no Moose;
+__PACKAGE__->meta->make_immutable;

@@ -14,7 +14,7 @@ has 'rockets'     => (
 has 'machine_gun' => (
 	is      => 'ro',
 	isa     => 'Machinegun',
-	handles => { mg_fire => 'shot' }
+	handles => { fire_machinegun => 'shot' }
 );
 
 # после создания взлетаем
@@ -23,20 +23,18 @@ after 'new' => sub {
     $self->takeoff;
 };
 
-# рассчет критического попадания после получения урона
-after 'get_damage' => sub {
-	
+# рассчет критического попадания перед получением урона
+before 'get_damage' => sub {
     my ( $self ) = @_;
     
-    if ( int( rand(100) ) < 11 ) {
+    if ( $self->is_get_critical_damage ) {
         print 'Поврежден двигатель!';
-        $self->destroy;
+        $self->durability = 0;
     }
 };
 
-# перед попыткой поплыть или поехать - уничтожаемся
-before [qw( move sail )] => sub {
-	
+# после попытки поплыть или поехать - уничтожаемся
+after [qw( move sail )] => sub {
     my ( $self ) = @_;
     
     print 'Самолет разбился!';
@@ -45,6 +43,8 @@ before [qw( move sail )] => sub {
 
 sub takeoff {
     print 'взлетел';
+    return 1;
 };
 
-return 1;
+no Moose;
+__PACKAGE__->meta->make_immutable;

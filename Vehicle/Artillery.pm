@@ -8,37 +8,37 @@ with 'Mobile';
 has 'cannon' => (
 	is      => 'ro',
     isa     => 'Cannon',
-    handles => { fire => 'shot' }
+    handles => { fire_cannon => 'shot' }
 );
 
 # после создания выходим на позицию
 after 'new' => sub {
     my ( $self ) = @_;
-    $self->go_to_arty_position;
+    $self->go_to_artillery_position;
 };
 
-# рассчет критического попадания после получения урона
-after 'get_damage' => sub {
-	
+# рассчет критического попадания перед получением урона
+before 'get_damage' => sub {
     my ( $self ) = @_;
     
-    if ( int( rand(100) ) < 11 ) {
+    if ( $self->is_get_critical_damage ) {
         print 'Подрыв боекомплекта!';
-        $self->destroy;
+        $self->durability = 0;
     }
 };
 
-# перед попыткой полететь или поплыть, уничтожаем единицу техники
-before [qw( fly sail )] => sub {
-	
+# после попытки полететь или поплыть, уничтожаем единицу техники
+after [qw( fly sail )] => sub {
     my ( $self ) = @_;
     
     print 'Артиллеристы не летают и не плавают!';
     $self->destroy;
 };
 
-sub go_to_arty_position {
+sub go_to_artillery_position {
     print 'вышел на позицию';
+    return 1;
 };
 
-return 1;
+no Moose;
+__PACKAGE__->meta->make_immutable;

@@ -4,14 +4,5 @@ package Cannon;
 use Moose;
 extends 'Weapon';
 
-# перезаряжаемся после выстрела
-after 'shot' => sub {
-    my ( $self ) = @_;
-    $self->reload;
-};
-
-sub reload {
-	print 'перезарядился';
-}
-
-return 1;
+no Moose;
+__PACKAGE__->meta->make_immutable;
