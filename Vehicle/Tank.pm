@@ -7,15 +7,15 @@ with 'Mobile';
 
 
 has 'main_cannon' => (
-	is      => 'ro',
+    is      => 'ro',
     isa     => 'Cannon',
     handles => { fire_cannon => 'shot' }
 );
 
 has 'machine_gun' => (
-	is      => 'ro',
-	isa     => 'Machinegun',
-	handles => { fire_machinegun => 'shot' }
+    is      => 'ro',
+    isa     => 'Machinegun',
+    handles => { fire_machinegun => 'shot' }
 );
 
 # после создания выходим на позицию

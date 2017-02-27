@@ -6,13 +6,13 @@ extends 'Vehicle';
 with 'Mobile';
 
 has 'main_cannon' => (
-	is      => 'ro',
+    is      => 'ro',
     isa     => 'Cannon',
     handles => { fire_cannon => 'shot' }
 );
 
 has 'torpedo' => (
-	is      => 'ro',
+    is      => 'ro',
     isa     => 'Torpedo',
     handles => { launch_torpedo => 'shot' }
 );

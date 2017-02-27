@@ -6,15 +6,15 @@ extends 'Vehicle';
 with 'Mobile';
 
 has 'rockets'     => (
-	is      => 'ro',
-	isa     => 'Rocket',
-	handles => { launch_rocket => 'shot' }
+    is      => 'ro',
+    isa     => 'Rocket',
+    handles => { launch_rocket => 'shot' }
 );
 
 has 'machine_gun' => (
-	is      => 'ro',
-	isa     => 'Machinegun',
-	handles => { fire_machinegun => 'shot' }
+    is      => 'ro',
+    isa     => 'Machinegun',
+    handles => { fire_machinegun => 'shot' }
 );
 
 # после создания взлетаем

@@ -6,7 +6,7 @@ extends 'Vehicle';
 with 'Mobile';
 
 has 'cannon' => (
-	is      => 'ro',
+    is      => 'ro',
     isa     => 'Cannon',
     handles => { fire_cannon => 'shot' }
 );

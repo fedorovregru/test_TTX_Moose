@@ -19,25 +19,25 @@ has 'magazine_ammo' => (
 );
 
 after 'new' => sub {
-	my ( $self ) = @_;
+    my ( $self ) = @_;
     #$self->reload;
 };
 
 # после выстрела пытаемся перезарядиться если оружие не заряжено
 after 'shot' => sub {
-	my ( $self ) = @_;
+    my ( $self ) = @_;
 	
     if ( $self->magazine_ammo == 0 ) {
-
-		# если перезарядиться не вышло, выходим с ошибкой
-		print 'кончился боезапас!' unless $self->reload;
-	}
+        
+        # если перезарядиться не вышло, выходим с ошибкой
+        print 'кончился боезапас!' unless $self->reload;
+    }
 };
 
 # прицеливаемся
 sub aim {
-	print 'прицелился';
-	return 1;
+    print 'прицелился';
+    return 1;
 }
 
 sub shot {
@@ -49,8 +49,8 @@ sub shot {
         return 0;
     }
     
-	$self->magazine_ammo( $self->magazine_ammo - 1 );
-	return 1;
+    $self->magazine_ammo( $self->magazine_ammo - 1 );
+    return 1;
 }
 
 sub reload {
@@ -61,15 +61,15 @@ sub reload {
     
     # заряжаем полный магазин если боеприпасов на перезаряд оказалось достаточно
     if ( $self->ammo_count >= $self->magazine_size ) {
-		$self->ammo_count( $self->ammo_count - $self->magazine_size );
+        $self->ammo_count( $self->ammo_count - $self->magazine_size );
         $self->magazine_ammo( $self->magazine_size );
         return 1;
     }
     
     # заряжаем неполный магазин если боеприпасов меньше чем размер магазина
     elsif ( $self->ammo_count < $self->magazine_size ) {
-		$self->magazine_ammo( $self->ammo_count );
-		$self->ammo_count(0);
+        $self->magazine_ammo( $self->ammo_count );
+        $self->ammo_count(0);
         return 1;
     }
 }

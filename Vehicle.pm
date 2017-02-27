@@ -13,7 +13,7 @@ has 'durability'     => ( is => 'rw', isa => 'Num' );
 
 # уничтожение конкретного экземпляра техники
 sub destroy {
-	my ( $self ) = @_;
+    my ( $self ) = @_;
     print 'уничтожен';
     return 1;
 };
@@ -32,7 +32,7 @@ sub get_damage {
 # рассчет критического попадания
 sub is_get_critical_damage {
 	
-	return 1 if int( rand(100) ) <= $critical_damage_chance;
+    return 1 if int( rand(100) ) <= $critical_damage_chance;
     return 0;
 }
 
