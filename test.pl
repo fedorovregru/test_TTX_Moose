@@ -14,9 +14,8 @@ my $tank_01 = Tank->new(
     main_cannon    => Cannon->new( ammo_type  => 'Снаряд',
                                    ammo_count => 25 ),
     
-    machine_gun    => Machinegun->new( ammo_type       =>  'Патрон',
-                                       ammo_count      => 2000,
-                                       magazine_size   => 30 ),
+    machine_gun    => Machinegun->new( ammo_type       => 'Патрон',
+                                       ammo_count      => 2000 ),
     
     model_name     => 'Т-110',
     armor_thikness => 280,
