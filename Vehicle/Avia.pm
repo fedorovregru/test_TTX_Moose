@@ -17,28 +17,36 @@ has 'machine_gun' => (
     handles => { fire_machinegun => 'shot' }
 );
 
-# после создания взлетаем
-after 'new' => sub {
-    my ( $self ) = @_;
-    $self->takeoff;
-};
-
-# рассчет критического попадания перед получением урона
-before 'get_damage' => sub {
+# расcчет критического попадания после получения урона
+after 'get_damage' => sub {
     my ( $self ) = @_;
     
     if ( $self->is_get_critical_damage ) {
         print 'Поврежден двигатель!';
-        $self->durability = 0;
+        $self->destroy;
     }
 };
 
-# после попытки поплыть или поехать - уничтожаемся
-after [qw( move sail )] => sub {
+# после попытки поплыть, уничтожаем единицу техники
+after 'sail' => sub {
     my ( $self ) = @_;
     
-    print 'Самолет разбился!';
+    print 'утонул!';
     $self->destroy;
+};
+
+# после попытки поехать, уничтожаем единицу техники
+after 'move' => sub {
+    my ( $self ) = @_;
+    
+    print 'разбился!';
+    $self->destroy;
+};
+
+# после создания взлетаем
+sub BUILD {
+    my ( $self ) = @_;
+    $self->takeoff;
 };
 
 sub takeoff {
@@ -47,4 +55,4 @@ sub takeoff {
 };
 
 no Moose;
-__PACKAGE__->meta->make_immutable( inline_constructor => 0 );
+__PACKAGE__->meta->make_immutable;

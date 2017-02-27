@@ -18,28 +18,36 @@ has 'machine_gun' => (
     handles => { fire_machinegun => 'shot' }
 );
 
-# после создания выходим на позицию
-after 'new' => sub {
-    my ( $self ) = @_;
-    $self->go_to_tanks_position;
-};
-
-# рассчет критического попадания перед получением урона
-before 'get_damage' => sub {
+# расcчет критического попадания после получения урона
+after 'get_damage' => sub {
     my ( $self ) = @_;
     
     if ( $self->is_get_critical_damage ) {  
         print 'Сдетонировал боекомплект!';
-        $self->durability = 0;
+        $self->destroy;
     }
 };
 
-# после попытки полететь или поплыть уничтожаем танк
-after [qw( fly sail )] => sub {
+# после попытки полететь, уничтожаем единицу техники
+after 'fly' => sub {
     my ( $self ) = @_;
     
-    print 'Танки не летают и не плавают!';
+    print 'снесло ветром :)!';
     $self->destroy;
+};
+
+# после попытки поплыть, уничтожаем единицу техники
+after 'sail' => sub {
+    my ( $self ) = @_;
+    
+    print 'утонул!';
+    $self->destroy;
+};
+
+# после создания выходим на позицию
+sub BUILD {
+    my ( $self ) = @_;
+    $self->go_to_tanks_position;
 };
 
 sub go_to_tanks_position {
@@ -48,4 +56,4 @@ sub go_to_tanks_position {
 };
 
 no Moose;
-__PACKAGE__->meta->make_immutable( inline_constructor => 0 );
+__PACKAGE__->meta->make_immutable;

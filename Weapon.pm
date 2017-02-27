@@ -23,8 +23,9 @@ sub shot {
     }
     
     $self->ammo_count( $self->ammo_count - 1 );
+    print 'выстрелил';
     return 1;
 }
 
 no Moose;
-__PACKAGE__->meta->make_immutable( inline_constructor => 0 );
+__PACKAGE__->meta->make_immutable;

@@ -3,11 +3,32 @@ package Reloadable;
 
 use Moose::Role;
 
+has 'magazine_size' => (
+    is      => 'ro',
+    isa     => 'Num',
+    default => 1
+);
+
+has 'magazine_ammo' => (
+    is      => 'rw',
+    isa     => 'Num',
+    default => 0
+);
+
+# после создания перезаряжаемся
+sub BUILD {
+    my ( $self ) = @_;
+    $self->reload;
+};
+
 sub reload {
     my ( $self ) = @_;
     
     # возвращаем ноль если боезапас пуст
-    return 0 if $self->ammo_count == 0;
+    if ( $self->ammo_count == 0 ) {
+        print 'кончился боезапас!';
+        return 0;
+    }
     
     # заряжаем полный магазин если боеприпасов на перезаряд оказалось достаточно
     if ( $self->ammo_count >= $self->magazine_size ) {

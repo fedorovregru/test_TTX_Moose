@@ -17,28 +17,36 @@ has 'torpedo' => (
     handles => { launch_torpedo => 'shot' }
 );
 
-# после создания выходим в море
-after 'new' => sub {
-    my ( $self ) = @_;
-    $self->out_to_sea;
-};
-
-# рассчет критического попадания перед получением урона
-before 'get_damage' => sub {
+# расcчет критического попадания после получения урона
+after 'get_damage' => sub {
     my ( $self ) = @_;
 	
     if ( $self->is_get_critical_damage ) {
         print 'Пробоина ниже ватерлинии!';
-        $self->durability = 0;
+        $self->destroy;
     }
 };
 
-# после попытки поехать или полететь уничтожаем корабль
-after [qw( move fly )] => sub {
+# после попытки полететь, уничтожаем единицу техники
+after 'fly' => sub {
     my ( $self ) = @_;
     
-    print 'Корабли не летают и не ездят по суше!';
+    print 'снесло ветром :)!';
     $self->destroy;
+};
+
+# после попытки поехать, уничтожаем единицу техники
+after 'move' => sub {
+    my ( $self ) = @_;
+    
+    print 'сел на мель!';
+    $self->destroy;
+};
+
+# после создания выходим в море
+sub BUILD {
+    my ( $self ) = @_;
+    $self->out_to_sea;
 };
 
 sub out_to_sea {
@@ -47,4 +55,4 @@ sub out_to_sea {
 };
 
 no Moose;
-__PACKAGE__->meta->make_immutable( inline_constructor => 0 );
+__PACKAGE__->meta->make_immutable;

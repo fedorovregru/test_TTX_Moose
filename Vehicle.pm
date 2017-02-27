@@ -3,7 +3,7 @@ package Vehicle;
 
 use Moose;
 
-my $critical_damage_chance = 10;
+has 'critical_damage_chance' => ( is => 'ro', isa => 'Num', default => 10 );
 
 has 'model_name'     => ( is => 'ro', isa => 'Str' );
 has 'armor_thikness' => ( is => 'ro', isa => 'Num' );
@@ -24,16 +24,14 @@ sub get_damage {
     
     $self->durability( $self->durability - $damage );
     
-    return $self->destroy if $self->durability <= 0;
-    
-    return 1;
+    return $self->durability <= 0 ? $self->destroy : 1;
 };
 
 # рассчет критического попадания
 sub is_get_critical_damage {
+    my ( $self ) = @_;
 	
-    return 1 if int( rand(100) ) <= $critical_damage_chance;
-    return 0;
+    return int( rand(100) ) <= $self->critical_damage_chance;
 }
 
 no Moose;
