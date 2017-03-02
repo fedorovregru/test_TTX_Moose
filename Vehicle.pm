@@ -1,35 +1,38 @@
+# класс техника
 package Vehicle;
 
 use Moose;
 
-has 'model_name'     => ( is  => 'r', isa => 'Str' );
-has 'armor_thikness' => ( is  => 'r', isa => 'Num' );
+has 'critical_damage_chance' => ( is => 'ro', isa => 'Num', default => 10 );
 
-has 'speed'          => ( is  => 'rw', isa => 'Num' );
-has 'durability'     => ( is  => 'rw', isa => 'Num' );
+has 'model_name'     => ( is => 'ro', isa => 'Str' );
+has 'armor_thikness' => ( is => 'ro', isa => 'Num' );
 
-after 'new' => sub {
-    return 1;
-};
+has 'speed'          => ( is => 'rw', isa => 'Num' );
+has 'durability'     => ( is => 'rw', isa => 'Num' );
 
-sub moving {
-    return 1;
-};
-
+# уничтожение конкретного экземпляра техники
 sub destroy {
+    my ( $self ) = @_;
+    print 'уничтожен';
     return 1;
 };
 
+# по технике получено попадание
 sub get_damage {
-    
     my ( $self, $damage ) = @_;
     
-    $self->durability( $self->durability - 1 );
+    $self->durability( $self->durability - $damage );
     
-    $self->destroy if $self->durability <= 0;
-    
-    return 1;
+    return $self->durability <= 0 ? $self->destroy : 1;
 };
+
+# рассчет критического попадания
+sub is_get_critical_damage {
+    my ( $self ) = @_;
+	
+    return int( rand(100) ) <= $self->critical_damage_chance;
+}
 
 no Moose;
 __PACKAGE__->meta->make_immutable;
