@@ -8,7 +8,7 @@ has 'ammo_count' => ( is => 'rw', isa => 'Num' );
 
 # прицеливаемся
 sub aim {
-    print 'прицелился';
+    print '[прицелился]';
     return 1;
 }
 
@@ -18,12 +18,12 @@ sub shot {
     
     # если боезапас пуст, выходим с ошибкой
     if ( $self->ammo_count == 0 ) {
-        print 'боезапас пуст!';
+        print '[боезапас пуст!]';
         return 0;
     }
     
     $self->ammo_count( $self->ammo_count - 1 );
-    print 'выстрелил';
+    print '[выстрелил]';
     return 1;
 }
 

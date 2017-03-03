@@ -4,17 +4,17 @@ package Mobile;
 use Moose::Role;
 
 sub move {
-    print 'передвинулся';
+    print '[передвинулся]';
     return 1;
 };
 
 sub fly {
-    print 'прилетел';
+    print '[прилетел]';
     return 1;
 };
 
 sub sail {
-    print 'приплыл';
+    print '[приплыл]';
     return 1;
 };
 

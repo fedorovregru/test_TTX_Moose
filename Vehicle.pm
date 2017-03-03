@@ -14,7 +14,7 @@ has 'durability'     => ( is => 'rw', isa => 'Num' );
 # уничтожение конкретного экземпляра техники
 sub destroy {
     my ( $self ) = @_;
-    print 'уничтожен';
+    print '[уничтожен]';
     return 1;
 };
 

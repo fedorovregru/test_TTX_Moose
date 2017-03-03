@@ -22,7 +22,7 @@ after 'get_damage' => sub {
     my ( $self ) = @_;
     
     if ( $self->is_get_critical_damage ) {
-        print 'Поврежден двигатель!';
+        print '[Поврежден двигатель!]';
         $self->destroy;
     }
 };
@@ -31,7 +31,7 @@ after 'get_damage' => sub {
 after 'sail' => sub {
     my ( $self ) = @_;
     
-    print 'утонул!';
+    print '[утонул!]';
     $self->destroy;
 };
 
@@ -39,7 +39,7 @@ after 'sail' => sub {
 after 'move' => sub {
     my ( $self ) = @_;
     
-    print 'разбился!';
+    print '[разбился!]';
     $self->destroy;
 };
 
@@ -50,7 +50,7 @@ sub BUILD {
 };
 
 sub takeoff {
-    print 'взлетел';
+    print '[взлетел]';
     return 1;
 };
 

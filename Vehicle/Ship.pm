@@ -22,7 +22,7 @@ after 'get_damage' => sub {
     my ( $self ) = @_;
 	
     if ( $self->is_get_critical_damage ) {
-        print 'Пробоина ниже ватерлинии!';
+        print '[Пробоина ниже ватерлинии!]';
         $self->destroy;
     }
 };
@@ -31,7 +31,7 @@ after 'get_damage' => sub {
 after 'fly' => sub {
     my ( $self ) = @_;
     
-    print 'снесло ветром :)!';
+    print '[снесло ветром :)!]';
     $self->destroy;
 };
 
@@ -39,7 +39,7 @@ after 'fly' => sub {
 after 'move' => sub {
     my ( $self ) = @_;
     
-    print 'сел на мель!';
+    print '[сел на мель!]';
     $self->destroy;
 };
 
@@ -50,7 +50,7 @@ sub BUILD {
 };
 
 sub out_to_sea {
-    print 'вышел в море';
+    print '[вышел в море]';
     return 1;
 };
 

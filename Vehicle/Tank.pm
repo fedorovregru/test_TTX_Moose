@@ -23,7 +23,7 @@ after 'get_damage' => sub {
     my ( $self ) = @_;
     
     if ( $self->is_get_critical_damage ) {  
-        print 'Сдетонировал боекомплект!';
+        print '[Сдетонировал боекомплект!]';
         $self->destroy;
     }
 };
@@ -32,7 +32,7 @@ after 'get_damage' => sub {
 after 'fly' => sub {
     my ( $self ) = @_;
     
-    print 'снесло ветром :)!';
+    print '[снесло ветром :)!]';
     $self->destroy;
 };
 
@@ -40,7 +40,7 @@ after 'fly' => sub {
 after 'sail' => sub {
     my ( $self ) = @_;
     
-    print 'утонул!';
+    print '[утонул!]';
     $self->destroy;
 };
 
@@ -51,7 +51,7 @@ sub BUILD {
 };
 
 sub go_to_tanks_position {
-    print 'вышел на позицию';
+    print '[вышел на позицию]';
     return 1;
 };
 
