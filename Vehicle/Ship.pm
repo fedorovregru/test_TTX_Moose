@@ -1,6 +1,8 @@
 # класс корабельная техника
 package Ship;
 
+use Modern::Perl;
+
 use Moose;
 extends 'Vehicle';
 with 'Mobile';
@@ -21,8 +23,14 @@ has 'torpedo' => (
 after 'get_damage' => sub {
     my ( $self ) = @_;
 	
+	# если объект уничтожен выходим со статусом "ноль"
+    if ( $self->is_destroyed ) {
+		say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+	
     if ( $self->is_get_critical_damage ) {
-        print '[Пробоина ниже ватерлинии!]';
+        say '[Пробоина ниже ватерлинии!]';
         $self->destroy;
     }
 };
@@ -31,7 +39,13 @@ after 'get_damage' => sub {
 after 'fly' => sub {
     my ( $self ) = @_;
     
-    print '[снесло ветром :)!]';
+    # если объект уничтожен выходим со статусом "ноль"
+    if ( $self->is_destroyed ) {
+		say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+    
+    say '[снесло ветром :)!]';
     $self->destroy;
 };
 
@@ -39,8 +53,22 @@ after 'fly' => sub {
 after 'move' => sub {
     my ( $self ) = @_;
     
-    print '[сел на мель!]';
+    # если объект уничтожен выходим со статусом "ноль"
+    if ( $self->is_destroyed ) {
+		say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+    
+    say '[сел на мель!]';
     $self->destroy;
+};
+
+# после уничтожения техники, уничтожаем оружие
+after 'destroy' => sub {
+    my ( $self ) = @_;
+    
+    $self->main_cannon->destroyed('1');
+    $self->torpedo->destroyed('1');
 };
 
 # после создания выходим в море
@@ -50,7 +78,15 @@ sub BUILD {
 };
 
 sub out_to_sea {
-    print '[вышел в море]';
+	my ( $self ) = @_;
+	
+	# если объект уничтожен выходим со статусом "ноль"
+    if ( $self->is_destroyed ) {
+		say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+	
+    say '[вышел в море]';
     return 1;
 };
 

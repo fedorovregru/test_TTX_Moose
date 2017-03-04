@@ -1,14 +1,25 @@
 # класс оружие
 package Weapon;
 
+use Modern::Perl;
 use Moose;
 
 has 'ammo_type'  => ( is => 'ro', isa => 'Str' );
 has 'ammo_count' => ( is => 'rw', isa => 'Num' );
 
+has 'destroyed'  => ( is => 'rw', clearer => 'revive', predicate => 'is_destroyed' );
+
 # прицеливаемся
 sub aim {
-    print '[прицелился]';
+	my ( $self ) = @_;
+    
+    # если объект уничтожен выходим со статусом "ноль"
+    if ( $self->is_destroyed ) {
+		say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+	
+    say '[прицелился]';
     return 1;
 }
 
@@ -16,14 +27,20 @@ sub aim {
 sub shot {
     my ( $self ) = @_;
     
+    # если объект уничтожен выходим со статусом "ноль"
+    if ( $self->is_destroyed ) {
+		say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+    
     # если боезапас пуст, выходим с ошибкой
     if ( $self->ammo_count == 0 ) {
-        print '[боезапас пуст!]';
+        say '[боезапас пуст!]';
         return 0;
     }
     
     $self->ammo_count( $self->ammo_count - 1 );
-    print '[выстрелил]';
+    say '[выстрелил]';
     return 1;
 }
 

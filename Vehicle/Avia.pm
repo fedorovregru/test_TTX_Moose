@@ -1,6 +1,8 @@
 # класс авиа техника
 package Avia;
 
+use Modern::Perl;
+
 use Moose;
 extends 'Vehicle';
 with 'Mobile';
@@ -21,8 +23,14 @@ has 'machine_gun' => (
 after 'get_damage' => sub {
     my ( $self ) = @_;
     
+    # если объект уничтожен выходим со статусом "ноль"
+    if ( $self->is_destroyed ) {
+		say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+    
     if ( $self->is_get_critical_damage ) {
-        print '[Поврежден двигатель!]';
+        say '[Поврежден двигатель!]';
         $self->destroy;
     }
 };
@@ -31,7 +39,13 @@ after 'get_damage' => sub {
 after 'sail' => sub {
     my ( $self ) = @_;
     
-    print '[утонул!]';
+    # если объект уничтожен выходим со статусом "ноль"
+    if ( $self->is_destroyed ) {
+		say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+    
+    say '[утонул!]';
     $self->destroy;
 };
 
@@ -39,8 +53,22 @@ after 'sail' => sub {
 after 'move' => sub {
     my ( $self ) = @_;
     
-    print '[разбился!]';
+    # если объект уничтожен выходим со статусом "ноль"
+    if ( $self->is_destroyed ) {
+		say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+    
+    say '[разбился!]';
     $self->destroy;
+};
+
+# после уничтожения техники, уничтожаем оружие
+after 'destroy' => sub {
+    my ( $self ) = @_;
+    
+    $self->rockets->destroyed('1');
+    $self->machine_gun->destroyed('1');
 };
 
 # после создания взлетаем
@@ -50,7 +78,15 @@ sub BUILD {
 };
 
 sub takeoff {
-    print '[взлетел]';
+	my ( $self ) = @_;
+	
+	# если объект уничтожен выходим со статусом "ноль"
+    if ( $self->is_destroyed ) {
+		say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+	
+    say '[взлетел]';
     return 1;
 };
 
