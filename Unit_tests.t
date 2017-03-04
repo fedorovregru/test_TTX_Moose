@@ -47,6 +47,21 @@ can_ok( $artillery_unit, 'sail'                     );
 can_ok( $artillery_unit->cannon, 'aim'  );
 can_ok( $artillery_unit->cannon, 'shot' );
 
+$artillery_unit->fire_cannon;
+is ( $artillery_unit->cannon->magazine_ammo, 1,  'Проверка магазина после одного выстрела'  );
+is ( $artillery_unit->cannon->ammo_count,    28, 'Проверка боезапаса после одного выстрела' );
+
+# опустошаем боезапас
+$artillery_unit->cannon->ammo_count( $artillery_unit->cannon->ammo_count - 28 );
+is ( $artillery_unit->cannon->reload, 0, 'Проверка перезаряжания при отсутствующем боезапасе' );
+
+# опустошаем магазин
+$artillery_unit->cannon->magazine_ammo( $artillery_unit->cannon->magazine_ammo - 1 );
+is ( $artillery_unit->fire_cannon, 0, 'Проверка выстрела при незаряженном магазине' );
+
+# возвращаем заряд в магазин, для дальнейшей проверки
+$artillery_unit->cannon->magazine_ammo(1);
+
 $artillery_unit->fly;
 is ( $artillery_unit->is_destroyed, 1, 'Проверка попытки взлететь' );
 
@@ -72,3 +87,4 @@ is ( $artillery_unit->get_damage,               0, 'Проверка попыт�
 is ( $artillery_unit->go_to_artillery_position, 0, 'Проверка попытки выйти на позицию для уничтоженного объекта' );
 is ( $artillery_unit->move,                     0, 'Проверка попытки поехать для уничтоженного объекта'          );
 is ( $artillery_unit->sail,                     0, 'Проверка попытки поплыть для уничтоженного объекта'          );
+
