@@ -6,7 +6,6 @@ use Test::More qw( no_plan );
 use Data::Dumper;
 
 use_ok( 'Weapon::Cannon'     );
-use_ok( 'Weapon::Machinegun' );
 use_ok( 'Vehicle::Artillery' );
 
 my $artillery_unit = Artillery->new(
@@ -26,7 +25,7 @@ is_deeply( $artillery_unit->cannon, { ammo_type     => 'Снаряд',
                                       ammo_count    => 29,
                                       magazine_size => 1,
                                       magazine_ammo => 1 },
-                                    'Орудие "пушка" присутствует' );
+                                    'Оружие "пушка" присутствует' );
 
 is( $artillery_unit->model_name,     'AR-19-75', 'Проверка названия модели'             );
 is( $artillery_unit->armor_thikness, 120,        'Проверка толщины брони'               );
@@ -48,16 +47,16 @@ can_ok( $artillery_unit->cannon, 'aim'  );
 can_ok( $artillery_unit->cannon, 'shot' );
 
 $artillery_unit->fire_cannon;
-is ( $artillery_unit->cannon->magazine_ammo, 1,  'Проверка магазина после одного выстрела'  );
-is ( $artillery_unit->cannon->ammo_count,    28, 'Проверка боезапаса после одного выстрела' );
+is ( $artillery_unit->cannon->magazine_ammo, 1,  'Проверка магазина пушки после одного выстрела'  );
+is ( $artillery_unit->cannon->ammo_count,    28, 'Проверка боезапаса пушки после одного выстрела' );
 
 # опустошаем боезапас
 $artillery_unit->cannon->ammo_count( $artillery_unit->cannon->ammo_count - 28 );
-is ( $artillery_unit->cannon->reload, 0, 'Проверка перезаряжания при отсутствующем боезапасе' );
+is ( $artillery_unit->cannon->reload, 0, 'Проверка перезаряжания пушки при отсутствующем боезапасе' );
 
 # опустошаем магазин
 $artillery_unit->cannon->magazine_ammo( $artillery_unit->cannon->magazine_ammo - 1 );
-is ( $artillery_unit->fire_cannon, 0, 'Проверка выстрела при незаряженном магазине' );
+is ( $artillery_unit->fire_cannon, 0, 'Проверка выстрела из пушки при незаряженном магазине' );
 
 # возвращаем заряд в магазин, для дальнейшей проверки
 $artillery_unit->cannon->magazine_ammo(1);
@@ -67,24 +66,22 @@ is ( $artillery_unit->is_destroyed, 1, 'Проверка попытки взле
 
 # "воскрешаем" объект для дальнейшей проверки
 $artillery_unit->revive;
-$artillery_unit->cannon->revive;
 
 $artillery_unit->sail;
 is ( $artillery_unit->is_destroyed, 1, 'Проверка попытки поплыть' );
 
 # "воскрешаем" объект для дальнейшей проверки
 $artillery_unit->revive;
-$artillery_unit->cannon->revive;
 
 is ( $artillery_unit->get_damage(800), 1, 'Получение максимального урона' );
 is ( $artillery_unit->get_damage(1),   0, 'Получение урона сверх максимального' );
 
 # проверки возможности выполнять действия после уничтожения
-is ( $artillery_unit->destroy,                  0, 'Проверка попытки уничтожить уже уничтоженный объект'         );
-is ( $artillery_unit->fire_cannon,              0, 'Проверка попытки выстрелить для уничтоженного объекта'       );
-is ( $artillery_unit->fly,                      0, 'Проверка попытки полететь для уничтоженного объекта'         );
-is ( $artillery_unit->get_damage,               0, 'Проверка попытки нанести урон уже уничтоженному объекту'     );
-is ( $artillery_unit->go_to_artillery_position, 0, 'Проверка попытки выйти на позицию для уничтоженного объекта' );
-is ( $artillery_unit->move,                     0, 'Проверка попытки поехать для уничтоженного объекта'          );
-is ( $artillery_unit->sail,                     0, 'Проверка попытки поплыть для уничтоженного объекта'          );
+is ( $artillery_unit->destroy,                  0, 'Проверка попытки уничтожить уже уничтоженный объект'            );
+is ( $artillery_unit->fire_cannon,              0, 'Проверка попытки выстрелить из пушки для уничтоженного объекта' );
+is ( $artillery_unit->fly,                      0, 'Проверка попытки полететь для уничтоженного объекта'            );
+is ( $artillery_unit->get_damage,               0, 'Проверка попытки нанести урон уже уничтоженному объекту'        );
+is ( $artillery_unit->go_to_artillery_position, 0, 'Проверка попытки выйти на позицию для уничтоженного объекта'    );
+is ( $artillery_unit->move,                     0, 'Проверка попытки поехать для уничтоженного объекта'             );
+is ( $artillery_unit->sail,                     0, 'Проверка попытки поплыть для уничтоженного объекта'             );
 
