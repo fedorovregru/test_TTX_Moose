@@ -7,7 +7,8 @@ use Data::Dumper;
 
 describe 'Тест класса Vehicle,' => sub {
     
-    use Vehicle;
+    require '../Vehicle.pm';
+    import Vehicle ( 'destroy', 'get_damage' );
     
     my $vehicle = bless {}, 'Vehicle';
     
@@ -25,8 +26,8 @@ describe 'Тест класса Vehicle,' => sub {
     };
     
     describe 'метод get_damage,' => sub {
-		
-		it 'объект уже уничтожен.' => sub {
+        
+        it 'объект уже уничтожен.' => sub {
             $vehicle->expects('is_destroyed')->returns(1)->once;
             ok !$vehicle->get_damage;
         };
@@ -47,18 +48,19 @@ describe 'Тест класса Vehicle,' => sub {
             
             ok $vehicle->get_damage(1) == 2;
         };
-	};
+    };
 };
 
 describe 'Тест класса Weapon,' => sub {
-	
-	use Weapon;
-	
-	my $weapon = bless {}, 'Weapon';
-	
-	describe 'метод aim,' => sub {
-		
-		it 'объект еще активен.' => sub {
+    
+    require '../Weapon.pm';
+    import Weapon ( 'aim', 'shot' );
+    
+    my $weapon = bless {}, 'Weapon';
+    
+    describe 'метод aim,' => sub {
+        
+        it 'объект еще активен.' => sub {
             $weapon->expects('is_destroyed')->returns(0)->once;
             ok $weapon->aim;
         };
@@ -67,17 +69,17 @@ describe 'Тест класса Weapon,' => sub {
             $weapon->expects('is_destroyed')->returns(1)->once;
             ok !$weapon->aim;
         };
-	};
-	
-	describe 'метод shot,' => sub {
+    };
+    
+    describe 'метод shot,' => sub {
 
         it 'объект уже уничтожен.' => sub {
             $weapon->expects('is_destroyed')->returns(1)->once;
             ok !$weapon->shot;
         };
         
-		it 'объект еще активен, боезапас пуст.' => sub {
-			
+        it 'объект еще активен, боезапас пуст.' => sub {
+            
             $weapon->expects('is_destroyed')->returns(0)->once;
             $weapon->expects('ammo_count')->returns(0)->once;
             
@@ -85,24 +87,25 @@ describe 'Тест класса Weapon,' => sub {
         };
         
         it 'объект еще активен, боезапас не пуст.' => sub {
-			
+            
             $weapon->expects('is_destroyed')->returns(0)->once;
             $weapon->expects('ammo_count')->returns(1)->exactly(3);
             
             ok $weapon->shot;
         };
-	};
+    };
 };
 
 describe 'Тест роли Mobile,' => sub {
-	
-	use Mobile;
-	
-	my $mobile = bless {}, 'Mobile';
-	
-	describe 'метод move,' => sub {
-		
-		it 'объект еще активен.' => sub {
+    
+    require '../Mobile.pm';
+    import Mobile ( 'move', 'fly', 'sail' );
+    
+    my $mobile = bless {}, 'Mobile';
+    
+    describe 'метод move,' => sub {
+        
+        it 'объект еще активен.' => sub {
             $mobile->expects('is_destroyed')->returns(0)->once;
             ok $mobile->move;
         };
@@ -111,11 +114,11 @@ describe 'Тест роли Mobile,' => sub {
             $mobile->expects('is_destroyed')->returns(1)->once;
             ok !$mobile->move;
         };
-	};
-	
-	describe 'метод fly,' => sub {
-		
-		it 'объект еще активен.' => sub {
+    };
+    
+    describe 'метод fly,' => sub {
+        
+        it 'объект еще активен.' => sub {
             $mobile->expects('is_destroyed')->returns(0)->once;
             ok $mobile->fly;
         };
@@ -124,11 +127,11 @@ describe 'Тест роли Mobile,' => sub {
             $mobile->expects('is_destroyed')->returns(1)->once;
             ok !$mobile->fly;
         };
-	};
-	
-	describe 'метод sail,' => sub {
-		
-		it 'объект еще активен.' => sub {
+    };
+    
+    describe 'метод sail,' => sub {
+        
+        it 'объект еще активен.' => sub {
             $mobile->expects('is_destroyed')->returns(0)->once;
             ok $mobile->sail;
         };
@@ -137,16 +140,17 @@ describe 'Тест роли Mobile,' => sub {
             $mobile->expects('is_destroyed')->returns(1)->once;
             ok !$mobile->sail;
         };
-	};
+    };
 };
 
 describe 'Тест роли Reloadable,' => sub {
-	
-	use Reloadable;
-	
-	my $reloadable = bless {}, 'Reloadable';
-	
-	describe 'метод shot,' => sub {
+    
+    require '../Reloadable.pm';
+    import Reloadable ( 'shot', 'reload' );
+    
+    my $reloadable = bless {}, 'Reloadable';
+    
+    describe 'метод shot,' => sub {
 
         it 'объект уже уничтожен.' => sub {
             $reloadable->expects('is_destroyed')->returns(1)->once;
@@ -168,9 +172,9 @@ describe 'Тест роли Reloadable,' => sub {
             
             ok $reloadable->shot;
         };
-	};
-	
-	describe 'метод reload,' => sub {
+    };
+    
+    describe 'метод reload,' => sub {
 
         it 'объект уже уничтожен.' => sub {
             $reloadable->expects('is_destroyed')->returns(1)->once;
@@ -204,7 +208,7 @@ describe 'Тест роли Reloadable,' => sub {
             
             ok $reloadable->reload;
         };
-	};
+    };
 };
 
 runtests unless caller;
