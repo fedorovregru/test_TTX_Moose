@@ -50,6 +50,50 @@ describe 'Тест класса Vehicle,' => sub {
 	};
 };
 
+describe 'Тест класса Weapon,' => sub {
+	
+	use Weapon;
+	
+	my $weapon = bless {}, 'Weapon';
+	
+	describe 'метод aim,' => sub {
+		
+		it 'объект еще активен.' => sub {
+            $weapon->expects('is_destroyed')->returns(0)->once;
+            ok $weapon->aim;
+        };
+        
+        it 'объект уже уничтожен.' => sub {
+            $weapon->expects('is_destroyed')->returns(1)->once;
+            ok !$weapon->aim;
+        };
+	};
+	
+	describe 'метод shot,' => sub {
+
+        it 'объект уже уничтожен.' => sub {
+            $weapon->expects('is_destroyed')->returns(1)->once;
+            ok !$weapon->shot;
+        };
+        
+		it 'объект еще активен, боезапас пуст.' => sub {
+			
+            $weapon->expects('is_destroyed')->returns(0)->once;
+            $weapon->expects('ammo_count')->returns(0)->once;
+            
+            ok !$weapon->shot;
+        };
+        
+        it 'объект еще активен, боезапас не пуст.' => sub {
+			
+            $weapon->expects('is_destroyed')->returns(0)->once;
+            $weapon->expects('ammo_count')->returns(1)->exactly(3);
+            
+            ok $weapon->shot;
+        };
+	};
+};
+
 describe 'Тест роли Mobile,' => sub {
 	
 	use Mobile;
@@ -123,6 +167,42 @@ describe 'Тест роли Reloadable,' => sub {
             $reloadable->expects('magazine_ammo')->returns(1)->exactly(3);
             
             ok $reloadable->shot;
+        };
+	};
+	
+	describe 'метод reload,' => sub {
+
+        it 'объект уже уничтожен.' => sub {
+            $reloadable->expects('is_destroyed')->returns(1)->once;
+            ok !$reloadable->reload;
+        };
+        
+        it 'объект еще активен, боезапас пуст.' => sub {
+            
+            $reloadable->expects('is_destroyed')->returns(0)->once;
+            $reloadable->expects('ammo_count')->returns(0)->once;
+            
+            ok !$reloadable->reload;
+        };
+        
+        it 'объект еще активен, боеприпасов на полный перезаряд достаточно.' => sub {
+            
+            $reloadable->expects('is_destroyed')->returns(0)->once;
+            $reloadable->expects('ammo_count')->returns(10)->exactly(4);
+            $reloadable->expects('magazine_size')->returns(1)->exactly(3);
+            $reloadable->expects('magazine_ammo')->once;
+            
+            ok $reloadable->reload;
+        };
+        
+        it 'объект еще активен, боеприпасов на полный перезаряд недостаточно.' => sub {
+            
+            $reloadable->expects('is_destroyed')->returns(0)->once;
+            $reloadable->expects('ammo_count')->returns(5)->exactly(6);
+            $reloadable->expects('magazine_size')->returns(10)->exactly(2);
+            $reloadable->expects('magazine_ammo')->once;
+            
+            ok $reloadable->reload;
         };
 	};
 };
