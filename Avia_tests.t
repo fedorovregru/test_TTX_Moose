@@ -26,21 +26,23 @@ my $avia_unit = Avia->new(
 
 isa_ok( $avia_unit, 'Avia' );
 
-is_deeply( $avia_unit->rockets, { ammo_type  => 'Ракета',
-                                  ammo_count => 5 },
+is_deeply( $avia_unit->rockets, { ammo_type     => 'Ракета',
+                                  ammo_count    => 5,
+                                  is_destroyed  => 0 },
                                 'Оружие "ракеты" присутствует' );
 
 is_deeply( $avia_unit->machine_gun, { ammo_type     => 'Патрон',
                                       ammo_count    => 1900,
                                       magazine_size => 100,
-                                      magazine_ammo => 100 },
+                                      magazine_ammo => 100,
+                                      is_destroyed  => 0 },
                                     'Оружие "пулемет" присутствует' );
 
 is( $avia_unit->model_name,     'AV-99-3', 'Проверка названия модели'             );
 is( $avia_unit->armor_thikness, 10,        'Проверка толщины брони'               );
 is( $avia_unit->speed,          5000,      'Проверка скорости'                    );
 is( $avia_unit->durability,     600,       'Проверка прочности'                   );
-is( $avia_unit->destroyed,      undef,     'Проверка флага уничтоженного объекта' );
+is( $avia_unit->is_destroyed,   0,         'Проверка флага уничтоженного объекта' );
 
 # проверки наличия методов
 can_ok( $avia_unit, 'BUILD'                  );
@@ -88,13 +90,13 @@ $avia_unit->move;
 is ( $avia_unit->is_destroyed, 1, 'Проверка попытки поехать' );
 
 # "воскрешаем" объект для дальнейшей проверки
-$avia_unit->revive;
+$avia_unit->is_destroyed(0);
 
 $avia_unit->sail;
 is ( $avia_unit->is_destroyed, 1, 'Проверка попытки поплыть' );
 
 # "воскрешаем" объект для дальнейшей проверки
-$avia_unit->revive;
+$avia_unit->is_destroyed(0);
 
 is ( $avia_unit->get_damage(600), 1, 'Получение максимального урона' );
 is ( $avia_unit->get_damage(1),   0, 'Получение урона сверх максимального' );

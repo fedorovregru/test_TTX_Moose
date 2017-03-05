@@ -19,15 +19,22 @@ has 'torpedo' => (
     handles => { launch_torpedo => 'shot' }
 );
 
-# расcчет критического попадания после получения урона
-after 'get_damage' => sub {
-    my ( $self ) = @_;
+# если объект уничтожен выходим со статусом "ноль"
+around 'out_to_sea' => sub {
+    my $orig = shift;
+    my $self = shift;
     
-    # если объект уничтожен выходим со статусом "ноль"
     if ( $self->is_destroyed ) {
         say '[действие невозможно, объект уничтожен!]';
         return 0;
     }
+    
+    $self->$orig;
+};
+
+# расcчет критического попадания после получения урона
+after 'get_damage' => sub {
+    my ( $self ) = @_;
     
     if ( $self->is_get_critical_damage ) {
         say '[Пробоина ниже ватерлинии!]';
@@ -39,12 +46,6 @@ after 'get_damage' => sub {
 after 'fly' => sub {
     my ( $self ) = @_;
     
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
-    
     say '[снесло ветром :)!]';
     $self->destroy;
 };
@@ -52,12 +53,6 @@ after 'fly' => sub {
 # после попытки поехать, уничтожаем единицу техники
 after 'move' => sub {
     my ( $self ) = @_;
-    
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
     
     say '[сел на мель!]';
     $self->destroy;
@@ -67,8 +62,8 @@ after 'move' => sub {
 after 'destroy' => sub {
     my ( $self ) = @_;
     
-    $self->main_cannon->destroyed('1');
-    $self->torpedo->destroyed('1');
+    $self->main_cannon->is_destroyed('1');
+    $self->torpedo->is_destroyed('1');
 };
 
 # после создания выходим в море
@@ -78,14 +73,6 @@ sub BUILD {
 };
 
 sub out_to_sea {
-    my ( $self ) = @_;
-    
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
-    
     say '[вышел в море]';
     return 1;
 };

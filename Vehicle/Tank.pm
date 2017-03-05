@@ -20,15 +20,22 @@ has 'machine_gun' => (
     handles => { fire_machinegun => 'shot' }
 );
 
-# расcчет критического попадания после получения урона
-after 'get_damage' => sub {
-    my ( $self ) = @_;
+# если объект уничтожен выходим со статусом "ноль"
+around 'go_to_tanks_position' => sub {
+    my $orig = shift;
+    my $self = shift;
     
-    # если объект уничтожен выходим со статусом "ноль"
     if ( $self->is_destroyed ) {
         say '[действие невозможно, объект уничтожен!]';
         return 0;
     }
+    
+    $self->$orig;
+};
+
+# расcчет критического попадания после получения урона
+after 'get_damage' => sub {
+    my ( $self ) = @_;
     
     if ( $self->is_get_critical_damage ) {  
         say '[Сдетонировал боекомплект!]';
@@ -40,12 +47,6 @@ after 'get_damage' => sub {
 after 'fly' => sub {
     my ( $self ) = @_;
     
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
-    
     say '[снесло ветром :)!]';
     $self->destroy;
 };
@@ -53,12 +54,6 @@ after 'fly' => sub {
 # после попытки поплыть, уничтожаем единицу техники
 after 'sail' => sub {
     my ( $self ) = @_;
-    
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
     
     say '[утонул!]';
     $self->destroy;
@@ -68,8 +63,8 @@ after 'sail' => sub {
 after 'destroy' => sub {
     my ( $self ) = @_;
     
-    $self->main_cannon->destroyed('1');
-    $self->machine_gun->destroyed('1');
+    $self->main_cannon->is_destroyed('1');
+    $self->machine_gun->is_destroyed('1');
 };
 
 # после создания выходим на позицию
@@ -79,14 +74,6 @@ sub BUILD {
 };
 
 sub go_to_tanks_position {
-    my ( $self ) = @_;
-    
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
-    
     say '[вышел на позицию]';
     return 1;
 };

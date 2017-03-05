@@ -7,18 +7,25 @@ use Moose;
 has 'ammo_type'  => ( is => 'ro', isa => 'Str' );
 has 'ammo_count' => ( is => 'rw', isa => 'Num' );
 
-has 'destroyed'  => ( is => 'rw', clearer => 'revive', predicate => 'is_destroyed' );
+has 'is_destroyed' => ( is      => 'rw',
+                        isa     => 'Bool',
+                        default => 0 );
 
-# прицеливаемся
-sub aim {
-    my ( $self ) = @_;
+# если объект уничтожен выходим со статусом "ноль"
+around [qw( aim shot )] => sub {
+    my $orig = shift;
+    my $self = shift;
     
-    # если объект уничтожен выходим со статусом "ноль"
     if ( $self->is_destroyed ) {
         say '[действие невозможно, объект уничтожен!]';
         return 0;
     }
     
+    $self->$orig;
+};
+
+# прицеливаемся
+sub aim {
     say '[прицелился]';
     return 1;
 }
@@ -26,12 +33,6 @@ sub aim {
 # стреляем
 sub shot {
     my ( $self ) = @_;
-    
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
     
     # если боезапас пуст, выходим с ошибкой
     if ( $self->ammo_count == 0 ) {

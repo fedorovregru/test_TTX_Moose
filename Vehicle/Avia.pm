@@ -19,15 +19,22 @@ has 'machine_gun' => (
     handles => { fire_machinegun => 'shot' }
 );
 
-# расcчет критического попадания после получения урона
-after 'get_damage' => sub {
-    my ( $self ) = @_;
+# если объект уничтожен выходим со статусом "ноль"
+around 'takeoff' => sub {
+    my $orig = shift;
+    my $self = shift;
     
-    # если объект уничтожен выходим со статусом "ноль"
     if ( $self->is_destroyed ) {
         say '[действие невозможно, объект уничтожен!]';
         return 0;
     }
+    
+    $self->$orig;
+};
+
+# расcчет критического попадания после получения урона
+after 'get_damage' => sub {
+    my ( $self ) = @_;
     
     if ( $self->is_get_critical_damage ) {
         say '[Поврежден двигатель!]';
@@ -39,12 +46,6 @@ after 'get_damage' => sub {
 after 'sail' => sub {
     my ( $self ) = @_;
     
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
-    
     say '[утонул!]';
     $self->destroy;
 };
@@ -52,12 +53,6 @@ after 'sail' => sub {
 # после попытки поехать, уничтожаем единицу техники
 after 'move' => sub {
     my ( $self ) = @_;
-    
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
     
     say '[разбился!]';
     $self->destroy;
@@ -67,8 +62,8 @@ after 'move' => sub {
 after 'destroy' => sub {
     my ( $self ) = @_;
     
-    $self->rockets->destroyed('1');
-    $self->machine_gun->destroyed('1');
+    $self->rockets->is_destroyed('1');
+    $self->machine_gun->is_destroyed('1');
 };
 
 # после создания взлетаем
@@ -78,14 +73,6 @@ sub BUILD {
 };
 
 sub takeoff {
-    my ( $self ) = @_;
-    
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
-    
     say '[взлетел]';
     return 1;
 };

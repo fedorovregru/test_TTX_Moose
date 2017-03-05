@@ -28,18 +28,20 @@ isa_ok( $ship_unit, 'Ship' );
 is_deeply( $ship_unit->main_cannon, { ammo_type     => 'Снаряд',
                                       ammo_count    => 199,
                                       magazine_size => 1,
-                                      magazine_ammo => 1 },
+                                      magazine_ammo => 1,
+                                      is_destroyed  => 0 },
                                     'Оружие "пушка" присутствует' );
 
 is_deeply( $ship_unit->torpedo, { ammo_type     => 'Торпеда',
-                                  ammo_count    => 8 },
+                                  ammo_count    => 8,
+                                  is_destroyed  => 0 },
                                 'Оружие "торпеды" присутствует' );
 
 is( $ship_unit->model_name,     'SH-02-N', 'Проверка названия модели'             );
 is( $ship_unit->armor_thikness, 50,        'Проверка толщины брони'               );
 is( $ship_unit->speed,          20,        'Проверка скорости'                    );
 is( $ship_unit->durability,     5000,      'Проверка прочности'                   );
-is( $ship_unit->destroyed,      undef,     'Проверка флага уничтоженного объекта' );
+is( $ship_unit->is_destroyed,   0,         'Проверка флага уничтоженного объекта' );
 
 # проверки наличия методов
 can_ok( $ship_unit, 'BUILD'                  );
@@ -84,13 +86,13 @@ $ship_unit->move;
 is ( $ship_unit->is_destroyed, 1, 'Проверка попытки поехать' );
 
 # "воскрешаем" объект для дальнейшей проверки
-$ship_unit->revive;
+$ship_unit->is_destroyed(0);
 
 $ship_unit->fly;
 is ( $ship_unit->is_destroyed, 1, 'Проверка попытки полететь' );
 
 # "воскрешаем" объект для дальнейшей проверки
-$ship_unit->revive;
+$ship_unit->is_destroyed(0);
 
 is ( $ship_unit->get_damage(5000), 1, 'Получение максимального урона' );
 is ( $ship_unit->get_damage(1),    0, 'Получение урона сверх максимального' );

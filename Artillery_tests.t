@@ -10,8 +10,8 @@ use_ok( 'Vehicle::Artillery' );
 
 my $artillery_unit = Artillery->new(
 
-    cannon         => Cannon->new( ammo_type  => 'Снаряд',
-                                   ammo_count => 30 ),
+    cannon         => Cannon->new( ammo_type    => 'Снаряд',
+                                   ammo_count   => 30 ),
     
     model_name     => 'AR-19-75',
     armor_thikness => 120,
@@ -24,14 +24,15 @@ isa_ok( $artillery_unit, 'Artillery' );
 is_deeply( $artillery_unit->cannon, { ammo_type     => 'Снаряд',
                                       ammo_count    => 29,
                                       magazine_size => 1,
-                                      magazine_ammo => 1 },
+                                      magazine_ammo => 1,
+                                      is_destroyed  => 0 },
                                     'Оружие "пушка" присутствует' );
 
 is( $artillery_unit->model_name,     'AR-19-75', 'Проверка названия модели'             );
 is( $artillery_unit->armor_thikness, 120,        'Проверка толщины брони'               );
 is( $artillery_unit->speed,          30,         'Проверка скорости'                    );
 is( $artillery_unit->durability,     800,        'Проверка прочности'                   );
-is( $artillery_unit->destroyed,      undef,      'Проверка флага уничтоженного объекта' );
+is( $artillery_unit->is_destroyed,   0,          'Проверка флага уничтоженного объекта' );
 
 # проверки наличия методов
 can_ok( $artillery_unit, 'BUILD'                    );
@@ -65,13 +66,13 @@ $artillery_unit->fly;
 is ( $artillery_unit->is_destroyed, 1, 'Проверка попытки взлететь' );
 
 # "воскрешаем" объект для дальнейшей проверки
-$artillery_unit->revive;
+$artillery_unit->is_destroyed(0);
 
 $artillery_unit->sail;
 is ( $artillery_unit->is_destroyed, 1, 'Проверка попытки поплыть' );
 
 # "воскрешаем" объект для дальнейшей проверки
-$artillery_unit->revive;
+$artillery_unit->is_destroyed(0);
 
 is ( $artillery_unit->get_damage(800), 1, 'Получение максимального урона' );
 is ( $artillery_unit->get_damage(1),   0, 'Получение урона сверх максимального' );

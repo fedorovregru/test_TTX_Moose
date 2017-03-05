@@ -11,19 +11,28 @@ has 'armor_thikness' => ( is => 'ro', isa => 'Num' );
 has 'speed'          => ( is => 'rw', isa => 'Num' );
 has 'durability'     => ( is => 'rw', isa => 'Num' );
 
-has 'destroyed'      => ( is => 'rw', clearer => 'revive', predicate => 'is_destroyed' );
+has 'is_destroyed'   => ( is      => 'rw',
+                          isa     => 'Bool',
+                          default => 0 );
 
-# уничтожение конкретного экземпляра техники
-sub destroy {
-    my ( $self ) = @_;
+# если объект уничтожен выходим со статусом "ноль"
+around [qw( destroy get_damage )] => sub {
+    my $orig = shift;
+    my $self = shift;
     
-    # если объект уничтожен выходим со статусом "ноль"
     if ( $self->is_destroyed ) {
         say '[действие невозможно, объект уничтожен!]';
         return 0;
     }
     
-    $self->destroyed('1');
+    $self->$orig(@_);
+};
+
+# уничтожение конкретного экземпляра техники
+sub destroy {
+    my ( $self ) = @_;
+    
+    $self->is_destroyed('1');
     say '[уничтожен]';
     
     return 1;
@@ -32,12 +41,6 @@ sub destroy {
 # по технике получено попадание
 sub get_damage {
     my ( $self, $damage ) = @_;
-    
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
     
     $self->durability( $self->durability - $damage );
     

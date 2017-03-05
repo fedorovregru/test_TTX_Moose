@@ -4,6 +4,8 @@ package Reloadable;
 use Modern::Perl;
 use Moose::Role;
 
+use Data::Dumper;
+
 has 'magazine_size' => (
     is      => 'ro',
     isa     => 'Num',
@@ -22,15 +24,22 @@ sub BUILD {
     $self->reload;
 };
 
-# переопределяем метод выстрела
-sub shot {
-    my ( $self ) = @_;
-    
-    # если объект уничтожен выходим со статусом "ноль"
+# если объект уничтожен выходим со статусом "ноль"
+around [qw( shot reload )] => sub {
+    my $orig = shift;
+    my $self = shift;
+
     if ( $self->is_destroyed ) {
         say '[действие невозможно, объект уничтожен!]';
         return 0;
     }
+    
+    $self->$orig(@_);
+};
+
+# переопределяем метод выстрела
+sub shot {
+    my ( $self ) = @_;
     
     # если оружие не заряжено, выходим с ошибкой
     if ( $self->magazine_ammo == 0 ) {
@@ -45,12 +54,6 @@ sub shot {
 
 sub reload {
     my ( $self ) = @_;
-    
-    # если объект уничтожен выходим со статусом "ноль"
-    if ( $self->is_destroyed ) {
-        say '[действие невозможно, объект уничтожен!]';
-        return 0;
-    }
     
     # возвращаем ноль если боезапас пуст
     if ( $self->ammo_count == 0 ) {

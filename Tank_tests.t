@@ -29,20 +29,22 @@ isa_ok( $tank_unit, 'Tank' );
 is_deeply( $tank_unit->main_cannon, { ammo_type     => 'Снаряд',
                                       ammo_count    => 24,
                                       magazine_size => 1,
-                                      magazine_ammo => 1 },
+                                      magazine_ammo => 1,
+                                      is_destroyed  => 0 },
                                     'Оружие "пушка" присутствует' );
 
 is_deeply( $tank_unit->machine_gun, { ammo_type     => 'Патрон',
                                       ammo_count    => 1900,
                                       magazine_size => 100,
-                                      magazine_ammo => 100 },
+                                      magazine_ammo => 100,
+                                      is_destroyed  => 0 },
                                     'Оружие "пулемет" присутствует' );
 
 is( $tank_unit->model_name,     'T-1000', 'Проверка названия модели'             );
 is( $tank_unit->armor_thikness, 800,      'Проверка толщины брони'               );
 is( $tank_unit->speed,          60,       'Проверка скорости'                    );
 is( $tank_unit->durability,     2000,     'Проверка прочности'                   );
-is( $tank_unit->destroyed,      undef,    'Проверка флага уничтоженного объекта' );
+is( $tank_unit->is_destroyed,   0,        'Проверка флага уничтоженного объекта' );
 
 # проверки наличия методов
 can_ok( $tank_unit, 'BUILD'                  );
@@ -90,13 +92,13 @@ $tank_unit->sail;
 is ( $tank_unit->is_destroyed, 1, 'Проверка попытки поплыть' );
 
 # "воскрешаем" объект для дальнейшей проверки
-$tank_unit->revive;
+$tank_unit->is_destroyed(0);
 
 $tank_unit->fly;
 is ( $tank_unit->is_destroyed, 1, 'Проверка попытки полететь' );
 
 # "воскрешаем" объект для дальнейшей проверки
-$tank_unit->revive;
+$tank_unit->is_destroyed(0);
 
 is ( $tank_unit->get_damage(2000), 1, 'Получение максимального урона' );
 is ( $tank_unit->get_damage(1),    0, 'Получение урона сверх максимального' );
