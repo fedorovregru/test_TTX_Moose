@@ -37,6 +37,13 @@ around [qw( shot reload )] => sub {
     $self->$orig(@_);
 };
 
+# после выстрела пытаемся перезарядиться если оружие не заряжено
+after 'shot' => sub {
+    my ( $self ) = @_;
+    
+    return ( !$self->magazine_ammo && !$self->reload ) ? 0 : 1;
+};
+
 # переопределяем метод выстрела
 sub shot {
     my ( $self ) = @_;
