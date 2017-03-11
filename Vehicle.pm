@@ -4,16 +4,18 @@ package Vehicle;
 use Modern::Perl;
 use Moose;
 
-has 'critical_damage_chance' => ( is => 'ro', isa => 'Num', default => 10 );
-
 has 'model_name'     => ( is => 'ro', isa => 'Str' );
 has 'armor_thikness' => ( is => 'ro', isa => 'Num' );
 has 'speed'          => ( is => 'rw', isa => 'Num' );
 has 'durability'     => ( is => 'rw', isa => 'Num' );
 
-has 'is_destroyed'   => ( is      => 'rw',
-                          isa     => 'Bool',
-                          default => 0 );
+has 'critical_damage_chance' => ( is      => 'ro',
+                                  isa     => 'Num',
+                                  default => 10 );
+
+has 'is_destroyed'           => ( is      => 'rw',
+                                  isa     => 'Bool',
+                                  default => 0 );
 
 # если объект уничтожен выходим со статусом "ноль"
 around [qw( destroy get_damage )] => sub {

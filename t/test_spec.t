@@ -95,119 +95,119 @@ describe 'Тест класса Weapon,' => sub {
 };
 
 describe 'Тест класса Artillery' => sub {
-	
-	use Vehicle::Artillery;
-	
-	my $artillery = bless {}, 'Artillery';
-	
-	it 'метод go_to_artillery_position, объект еще активен.' => sub {
-		
-		$artillery->expects('is_destroyed')->returns(0)->once;
-        ok $artillery->go_to_artillery_position;
-	};
-	
-	it 'метод go_to_artillery_position, объект уже уничтожен.' => sub {
-		
-		$artillery->expects('is_destroyed')->returns(1)->once;
+
+    use Vehicle::Artillery;
+    
+    my $artillery = bless {}, 'Artillery';
+
+    it 'метод go_to_artillery_position, объект еще активен.' => sub {
+
+        $artillery->expects('is_destroyed')->returns(0)->once;
+            ok $artillery->go_to_artillery_position;
+        };
+
+    it 'метод go_to_artillery_position, объект уже уничтожен.' => sub {
+        
+        $artillery->expects('is_destroyed')->returns(1)->once;
         ok !$artillery->go_to_artillery_position;
-	};
-	
-	it 'метод get_damage, критическое попадание.' => sub {
-		
-		$artillery->expects('is_destroyed')->returns(0)->once;
-		$artillery->expects('durability')->returns(1)->exactly(3);
-		$artillery->expects('is_get_critical_damage')->returns(1)->once;
-		$artillery->expects('destroy')->returns(1)->once;
-		
+    };
+    
+    it 'метод get_damage, критическое попадание.' => sub {
+        
+        $artillery->expects('is_destroyed')->returns(0)->once;
+        $artillery->expects('durability')->returns(1)->exactly(3);
+        $artillery->expects('is_get_critical_damage')->returns(1)->once;
+        $artillery->expects('destroy')->returns(1)->once;
+        
         ok $artillery->get_damage(1);
-	};
+    };
 };
 
 describe 'Тест класса Avia' => sub {
-	
-	use Vehicle::Avia;
-	
-	my $avia = bless {}, 'Avia';
-	
-	it 'метод takeoff, объект еще активен.' => sub {
-		
-		$avia->expects('is_destroyed')->returns(0)->once;
+    
+    use Vehicle::Avia;
+    
+    my $avia = bless {}, 'Avia';
+    
+    it 'метод takeoff, объект еще активен.' => sub {
+        
+        $avia->expects('is_destroyed')->returns(0)->once;
         ok $avia->takeoff;
-	};
-	
-	it 'метод takeoff, объект уже уничтожен.' => sub {
-		
-		$avia->expects('is_destroyed')->returns(1)->once;
+    };
+    
+    it 'метод takeoff, объект уже уничтожен.' => sub {
+        
+        $avia->expects('is_destroyed')->returns(1)->once;
         ok !$avia->takeoff;
-	};
-	
-	it 'метод get_damage, критическое попадание.' => sub {
-		
-		$avia->expects('is_destroyed')->returns(0)->once;
-		$avia->expects('durability')->returns(1)->exactly(3);
-		$avia->expects('is_get_critical_damage')->returns(1)->once;
-		$avia->expects('destroy')->returns(1)->once;
-		
+    };
+    
+    it 'метод get_damage, критическое попадание.' => sub {
+        
+        $avia->expects('is_destroyed')->returns(0)->once;
+        $avia->expects('durability')->returns(1)->exactly(3);
+        $avia->expects('is_get_critical_damage')->returns(1)->once;
+        $avia->expects('destroy')->returns(1)->once;
+        
         ok $avia->get_damage(1);
-	};
+    };
 };
 
 describe 'Тест класса Ship' => sub {
-	
-	use Vehicle::Ship;
-	
-	my $ship = bless {}, 'Ship';
-	
-	it 'метод out_to_sea, объект еще активен.' => sub {
-		
-		$ship->expects('is_destroyed')->returns(0)->once;
+    
+    use Vehicle::Ship;
+    
+    my $ship = bless {}, 'Ship';
+    
+    it 'метод out_to_sea, объект еще активен.' => sub {
+        
+        $ship->expects('is_destroyed')->returns(0)->once;
         ok $ship->out_to_sea;
-	};
-	
-	it 'метод out_to_sea, объект уже уничтожен.' => sub {
-		
-		$ship->expects('is_destroyed')->returns(1)->once;
+    };
+    
+    it 'метод out_to_sea, объект уже уничтожен.' => sub {
+        
+        $ship->expects('is_destroyed')->returns(1)->once;
         ok !$ship->out_to_sea;
-	};
-	
-	it 'метод get_damage, критическое попадание.' => sub {
-		
-		$ship->expects('is_destroyed')->returns(0)->once;
-		$ship->expects('durability')->returns(1)->exactly(3);
-		$ship->expects('is_get_critical_damage')->returns(1)->once;
-		$ship->expects('destroy')->returns(1)->once;
-		
+    };
+    
+    it 'метод get_damage, критическое попадание.' => sub {
+        
+        $ship->expects('is_destroyed')->returns(0)->once;
+        $ship->expects('durability')->returns(1)->exactly(3);
+        $ship->expects('is_get_critical_damage')->returns(1)->once;
+        $ship->expects('destroy')->returns(1)->once;
+        
         ok $ship->get_damage(1);
-	};
+    };
 };
 
 describe 'Тест класса Tank' => sub {
-	
-	use Vehicle::Tank;
-	
-	my $tank = bless {}, 'Tank';
-	
-	it 'метод go_to_tanks_position, объект еще активен.' => sub {
-		
-		$tank->expects('is_destroyed')->returns(0)->once;
+    
+    use Vehicle::Tank;
+    
+    my $tank = bless {}, 'Tank';
+    
+    it 'метод go_to_tanks_position, объект еще активен.' => sub {
+        
+        $tank->expects('is_destroyed')->returns(0)->once;
         ok $tank->go_to_tanks_position;
-	};
-	
-	it 'метод go_to_tanks_position, объект уже уничтожен.' => sub {
-		
-		$tank->expects('is_destroyed')->returns(1)->once;
+    };
+    
+    it 'метод go_to_tanks_position, объект уже уничтожен.' => sub {
+        
+        $tank->expects('is_destroyed')->returns(1)->once;
         ok !$tank->go_to_tanks_position;
-	};
-	
-	it 'метод get_damage, критическое попадание.' => sub {
-		
-		$tank->expects('is_destroyed')->returns(0)->once;
-		$tank->expects('durability')->returns(1)->exactly(3);
-		$tank->expects('is_get_critical_damage')->returns(1)->once;
-		$tank->expects('destroy')->returns(1)->once;
-		
+    };
+    
+    it 'метод get_damage, критическое попадание.' => sub {
+        
+        $tank->expects('is_destroyed')->returns(0)->once;
+        $tank->expects('durability')->returns(1)->exactly(3);
+        $tank->expects('is_get_critical_damage')->returns(1)->once;
+        $tank->expects('destroy')->returns(1)->once;
+        
         ok $tank->get_damage(1);
-	};
+    };
 };
 
 describe 'Тест роли Mobile,' => sub {
