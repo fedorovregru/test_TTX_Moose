@@ -1,23 +1,53 @@
 #!/usr/bin/perl
 
 use Modern::Perl;
-use Test::More tests => 14;
+use Test::More tests => 12;
 use Test::Exception;
 
 use Data::Dumper;
 
 use_ok( 'Weapon' );
 
+subtest 'Тест объекта с вручную заданными параметрами' => sub {
+
+    plan tests => 4;
+    
+    # создаем объект с вручную заданными параметрами
+    my $weapon_unit = Weapon->new(
+        ammo_type    => 'Снаряд',
+        ammo_count   => 30,
+        is_destroyed => 1
+    );
+
+    isa_ok( $weapon_unit, 'Weapon' );
+
+    is( $weapon_unit->ammo_type,    'Снаряд', 'Проверка типа боезапаса.'              );
+    is( $weapon_unit->ammo_count,   30,       'Проверка количества боезапаса.'        );
+    is( $weapon_unit->is_destroyed, 1,        'Проверка флага уничтоженного объекта.' );
+};
+
+subtest 'Тест объекта с параметрами по-умолчанию' => sub {
+
+    plan tests => 4;
+    
+    # создаем объект с параметрами по-умолчанию
+    my $weapon_unit = Weapon->new(
+        ammo_type  => 'Снаряд',
+        ammo_count => 30
+    );
+
+    isa_ok( $weapon_unit, 'Weapon' );
+
+    is( $weapon_unit->ammo_type,    'Снаряд', 'Проверка типа боезапаса.'              );
+    is( $weapon_unit->ammo_count,   30,       'Проверка количества боезапаса.'        );
+    is( $weapon_unit->is_destroyed, 0,        'Проверка флага уничтоженного объекта.' );
+};
+
+# создаем объект с параметрами по-умолчанию
 my $weapon_unit = Weapon->new(
-    ammo_type    => 'Снаряд',
-    ammo_count   => 30
+    ammo_type  => 'Снаряд',
+    ammo_count => 30
 );
-
-isa_ok( $weapon_unit, 'Weapon' );
-
-is( $weapon_unit->ammo_type,    'Снаряд', 'Проверка типа боезапаса.'              );
-is( $weapon_unit->ammo_count,   30,       'Проверка количества боезапаса.'        );
-is( $weapon_unit->is_destroyed, 0,        'Проверка флага уничтоженного объекта.' );
 
 # проверки наличия методов
 can_ok( $weapon_unit, 'aim'  );

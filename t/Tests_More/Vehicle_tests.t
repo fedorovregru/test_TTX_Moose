@@ -18,7 +18,8 @@ subtest 'Тест объекта с вручную заданными парам
         armor_thikness         => 1000,
         speed                  => 90,
         durability             => 500,
-        critical_damage_chance => 50
+        critical_damage_chance => 50,
+        is_destroyed           => 1
     );
 
     isa_ok( $vehicle_unit, 'Vehicle' );
@@ -29,7 +30,7 @@ subtest 'Тест объекта с вручную заданными парам
     is( $vehicle_unit->speed,                  90,             'Проверка скорости техники.'                    );
     is( $vehicle_unit->durability,             500,            'Проверка прочности техники.'                   );
     is( $vehicle_unit->critical_damage_chance, 50,             'Проверка шанса критического урона по технике.' );
-    is( $vehicle_unit->is_destroyed,           0,              'Проверка флага уничтоженного объекта.'         );
+    is( $vehicle_unit->is_destroyed,           1,              'Проверка флага уничтоженного объекта.'         );
 };
 
 subtest 'Тест объекта с параметрами "по-умолчанию"' => sub {
