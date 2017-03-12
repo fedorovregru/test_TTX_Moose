@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 use Modern::Perl;
-use Test::More tests => 61;
+use Test::More tests => 40;
 use Test::Exception;
 
 use Data::Dumper;
@@ -156,62 +156,12 @@ can_ok( $tank_unit, 'fly'  );
 can_ok( $tank_unit, 'sail' );
 
 # проверка записи некорректных данных в поля объекта
-dies_ok { $tank_unit->main_cannon->ammo_type(     10     ) } 'Попытка записи некорректного значения в main_cannon->ammo_type.';
-dies_ok { $tank_unit->main_cannon->ammo_count(    'test' ) } 'Попытка записи некорректного значения в main_cannon->ammo_count.';
-dies_ok { $tank_unit->main_cannon->magazine_size( 'test' ) } 'Попытка записи некорректного значения в main_cannon->magazine_size.';
-dies_ok { $tank_unit->main_cannon->magazine_ammo( 'test' ) } 'Попытка записи некорректного значения в main_cannon->magazine_ammo.';
-dies_ok { $tank_unit->main_cannon->is_destroyed(  'test' ) } 'Попытка записи некорректного значения в main_cannon->is_destroyed.';
-
-dies_ok { $tank_unit->machine_gun->ammo_type(     10     ) } 'Попытка записи некорректного значения в machine_gun->ammo_type.';
-dies_ok { $tank_unit->machine_gun->ammo_count(    'test' ) } 'Попытка записи некорректного значения в machine_gun->ammo_count.';
-dies_ok { $tank_unit->machine_gun->magazine_size( 'test' ) } 'Попытка записи некорректного значения в machine_gun->magazine_size.';
-dies_ok { $tank_unit->machine_gun->magazine_ammo( 'test' ) } 'Попытка записи некорректного значения в machine_gun->magazine_ammo.';
-dies_ok { $tank_unit->machine_gun->is_destroyed(  'test' ) } 'Попытка записи некорректного значения в machine_gun->is_destroyed.';
-
 dies_ok { $tank_unit->model_name(             150    ) } 'Попытка записи некорректного значения в model_name.';
 dies_ok { $tank_unit->armor_thikness(         'test' ) } 'Попытка записи некорректного значения в armor_thikness.';
 dies_ok { $tank_unit->speed(                  'test' ) } 'Попытка записи некорректного значения в speed.';
 dies_ok { $tank_unit->durability(             'test' ) } 'Попытка записи некорректного значения в durability.';
 dies_ok { $tank_unit->critical_damage_chance( 'test' ) } 'Попытка записи некорректного значения в durability.';
 dies_ok { $tank_unit->is_destroyed(           'test' ) } 'Попытка записи некорректного значения в is_destroyed.';
-
-# производим выстрел из пушки, проверяем уменьшение боезапаса и произошла ли перезарядка
-$tank_unit->fire_cannon;
-is ( $tank_unit->main_cannon->magazine_ammo, 1,  'Проверка магазина орудия "пушка" после выстрела.'  );
-is ( $tank_unit->main_cannon->ammo_count,    28, 'Проверка боезапаса орудия "пушка" после выстрела.' );
-
-# производим выстрел из пулемета, проверяем уменьшение патронов в магазине и сохранение боезапаса
-$tank_unit->fire_machinegun;
-is ( $tank_unit->machine_gun->magazine_ammo, 49,   'Проверка магазина орудия "пулемет" после выстрела.'  );
-is ( $tank_unit->machine_gun->ammo_count,    1950, 'Проверка боезапаса орудия "пулемет" после выстрела.' );
-
-# уменьшаем патроны в магазине пулемета до одного
-$tank_unit->machine_gun->magazine_ammo(1);
-# производим выстрел из пулемета, проверяем произошла ли перезарядка
-$tank_unit->fire_machinegun;
-is ( $tank_unit->machine_gun->magazine_ammo, 50,   'Проверка магазина орудия "пулемет" после выстрела.'  );
-is ( $tank_unit->machine_gun->ammo_count,    1900, 'Проверка боезапаса орудия "пулемет" после выстрела.' );
-
-# уменьшаем боезапас до одного заряда для проверки неполной перезарядки орудия "пулемет"
-$tank_unit->machine_gun->ammo_count(1);
-$tank_unit->machine_gun->reload;
-is ( $tank_unit->machine_gun->magazine_ammo, 1, 'Проверка перезарядки орудия "пулемет" при недостатке боезапаса до полного перезаряда.' );
-
-# обнуляем боезапас у пушки и пулемета, проверяем невозможность перезарядки
-$tank_unit->main_cannon->ammo_count(0);
-$tank_unit->machine_gun->ammo_count(0);
-is ( $tank_unit->main_cannon->reload, 0, 'Проверка перезарядки орудия "пушка" при отсутствующем боезапасе.'   );
-is ( $tank_unit->machine_gun->reload, 0, 'Проверка перезарядки орудия "пулемет" при отсутствующем боезапасе.' );
-
-# обнуляем магазин у пушки и пулемета, проверяем невозможность выстрела
-$tank_unit->main_cannon->magazine_ammo(0);
-$tank_unit->machine_gun->magazine_ammo(0);
-is ( $tank_unit->fire_cannon,     0, 'Проверка выстрела из орудия "пушка" при пустом магазине.'   );
-is ( $tank_unit->fire_machinegun, 0, 'Проверка выстрела из орудия "пулемет" при пустом магазине.' );
-
-# возвращаем по одному заряду в магазин для последующей проверки
-$tank_unit->main_cannon->magazine_ammo(1);
-$tank_unit->machine_gun->magazine_ammo(1);
 
 # проверяем уничтожение танка при попытке полететь
 $tank_unit->fly;
