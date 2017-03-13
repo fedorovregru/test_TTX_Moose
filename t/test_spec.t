@@ -5,33 +5,33 @@ use Test::Spec;
 
 use Data::Dumper;
 
-describe 'Тест класса Vehicle,' => sub {
+describe 'Объект класса Vehicle' => sub {
     
     use Vehicle;
     
     my $vehicle = bless {}, 'Vehicle';
     
-    describe 'метод destroy,' => sub {
+    describe 'метод destroy' => sub {
         
-        it 'объект еще активен.' => sub {
+        it 'должен уничтожать объект, если тот еще активен.' => sub {
             $vehicle->expects('is_destroyed')->returns(0)->exactly(2);
             ok $vehicle->destroy;
         };
         
-        it 'объект уже уничтожен.' => sub {
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
             $vehicle->expects('is_destroyed')->returns(1)->once;
             ok !$vehicle->destroy;
         };
     };
     
-    describe 'метод get_damage,' => sub {
+    describe 'метод get_damage' => sub {
         
-        it 'объект уже уничтожен.' => sub {
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
             $vehicle->expects('is_destroyed')->returns(1)->once;
             ok !$vehicle->get_damage;
         };
         
-        it 'объект еще активен, получение повреждений меньше чем текущая прочность.' => sub {
+        it 'должен только уменьшать прочность, если повреждений наносится меньше чем текущая прочность.' => sub {
             
             $vehicle->expects('is_destroyed')->returns(0)->once;
             $vehicle->expects('durability')->returns(1)->exactly(3);
@@ -39,7 +39,7 @@ describe 'Тест класса Vehicle,' => sub {
             ok $vehicle->get_damage(1);
         };
         
-        it 'объект еще активен, получение повреждений больше чем текущая прочность.' => sub {
+        it 'должен уменьшать прочность и уничтожать объект, если повреждений наносится больше чем текущая прочность или столько-же.' => sub {
             
             $vehicle->expects('is_destroyed')->returns(0)->once;
             $vehicle->expects('durability')->returns(0)->exactly(3);
@@ -50,33 +50,33 @@ describe 'Тест класса Vehicle,' => sub {
     };
 };
 
-describe 'Тест класса Weapon,' => sub {
+describe 'Объект класса Weapon' => sub {
     
     use Weapon;
     
     my $weapon = bless {}, 'Weapon';
     
-    describe 'метод aim,' => sub {
+    describe 'метод aim' => sub {
         
-        it 'объект еще активен.' => sub {
+        it 'должен выполнять прицеливание, если объект еще активен.' => sub {
             $weapon->expects('is_destroyed')->returns(0)->once;
             ok $weapon->aim;
         };
         
-        it 'объект уже уничтожен.' => sub {
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
             $weapon->expects('is_destroyed')->returns(1)->once;
             ok !$weapon->aim;
         };
     };
     
-    describe 'метод shot,' => sub {
+    describe 'метод shot' => sub {
 
-        it 'объект уже уничтожен.' => sub {
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
             $weapon->expects('is_destroyed')->returns(1)->once;
             ok !$weapon->shot;
         };
         
-        it 'объект еще активен, боезапас пуст.' => sub {
+        it 'не должен выполняться, если боезапас пуст.' => sub {
             
             $weapon->expects('is_destroyed')->returns(0)->once;
             $weapon->expects('ammo_count')->returns(0)->once;
@@ -84,7 +84,7 @@ describe 'Тест класса Weapon,' => sub {
             ok !$weapon->shot;
         };
         
-        it 'объект еще активен, боезапас не пуст.' => sub {
+        it 'должен уменьшать боезапас, если боезапас не пуст.' => sub {
             
             $weapon->expects('is_destroyed')->returns(0)->once;
             $weapon->expects('ammo_count')->returns(1)->exactly(3);
@@ -94,25 +94,26 @@ describe 'Тест класса Weapon,' => sub {
     };
 };
 
-describe 'Тест класса Artillery' => sub {
+describe 'Объект класса Artillery' => sub {
 
     use Vehicle::Artillery;
     
     my $artillery = bless {}, 'Artillery';
 
-    it 'метод go_to_artillery_position, объект еще активен.' => sub {
+    describe 'метод go_to_artillery_position' => sub {
 
-        $artillery->expects('is_destroyed')->returns(0)->once;
+        it 'должен выполняться, если объект еще активен.' => sub {
+            $artillery->expects('is_destroyed')->returns(0)->once;
             ok $artillery->go_to_artillery_position;
         };
 
-    it 'метод go_to_artillery_position, объект уже уничтожен.' => sub {
-        
-        $artillery->expects('is_destroyed')->returns(1)->once;
-        ok !$artillery->go_to_artillery_position;
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
+            $artillery->expects('is_destroyed')->returns(1)->once;
+            ok !$artillery->go_to_artillery_position;
+        };
     };
     
-    it 'метод get_damage, критическое попадание.' => sub {
+    it 'при вызове метода get_damage должно происходить уничтожение объекта при критическом попадании.' => sub {
         
         $artillery->expects('is_destroyed')->returns(0)->once;
         $artillery->expects('durability')->returns(1)->exactly(3);
@@ -123,25 +124,26 @@ describe 'Тест класса Artillery' => sub {
     };
 };
 
-describe 'Тест класса Avia' => sub {
+describe 'Объект класса Avia' => sub {
     
     use Vehicle::Avia;
     
     my $avia = bless {}, 'Avia';
     
-    it 'метод takeoff, объект еще активен.' => sub {
-        
-        $avia->expects('is_destroyed')->returns(0)->once;
-        ok $avia->takeoff;
+    describe 'метод takeoff' => sub {
+
+        it 'должен выполняться, если объект еще активен.' => sub {
+            $avia->expects('is_destroyed')->returns(0)->once;
+            ok $avia->takeoff;
+        };
+
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
+            $avia->expects('is_destroyed')->returns(1)->once;
+            ok !$avia->takeoff;
+        };
     };
     
-    it 'метод takeoff, объект уже уничтожен.' => sub {
-        
-        $avia->expects('is_destroyed')->returns(1)->once;
-        ok !$avia->takeoff;
-    };
-    
-    it 'метод get_damage, критическое попадание.' => sub {
+    it 'при вызове метода get_damage должно происходить уничтожение объекта при критическом попадании.' => sub {
         
         $avia->expects('is_destroyed')->returns(0)->once;
         $avia->expects('durability')->returns(1)->exactly(3);
@@ -152,25 +154,26 @@ describe 'Тест класса Avia' => sub {
     };
 };
 
-describe 'Тест класса Ship' => sub {
+describe 'Объект класса Ship' => sub {
     
     use Vehicle::Ship;
     
     my $ship = bless {}, 'Ship';
     
-    it 'метод out_to_sea, объект еще активен.' => sub {
-        
-        $ship->expects('is_destroyed')->returns(0)->once;
-        ok $ship->out_to_sea;
+    describe 'метод out_to_sea' => sub {
+
+        it 'должен выполняться, если объект еще активен.' => sub {
+            $ship->expects('is_destroyed')->returns(0)->once;
+            ok $ship->out_to_sea;
+        };
+
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
+            $ship->expects('is_destroyed')->returns(1)->once;
+            ok !$ship->out_to_sea;
+        };
     };
     
-    it 'метод out_to_sea, объект уже уничтожен.' => sub {
-        
-        $ship->expects('is_destroyed')->returns(1)->once;
-        ok !$ship->out_to_sea;
-    };
-    
-    it 'метод get_damage, критическое попадание.' => sub {
+    it 'при вызове метода get_damage должно происходить уничтожение объекта при критическом попадании.' => sub {
         
         $ship->expects('is_destroyed')->returns(0)->once;
         $ship->expects('durability')->returns(1)->exactly(3);
@@ -181,25 +184,26 @@ describe 'Тест класса Ship' => sub {
     };
 };
 
-describe 'Тест класса Tank' => sub {
+describe 'Объект класса Tank' => sub {
     
     use Vehicle::Tank;
     
     my $tank = bless {}, 'Tank';
     
-    it 'метод go_to_tanks_position, объект еще активен.' => sub {
-        
-        $tank->expects('is_destroyed')->returns(0)->once;
-        ok $tank->go_to_tanks_position;
+    describe 'метод go_to_tanks_position' => sub {
+
+        it 'должен выполняться, если объект еще активен.' => sub {
+            $tank->expects('is_destroyed')->returns(0)->once;
+            ok $tank->go_to_tanks_position;
+        };
+
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
+            $tank->expects('is_destroyed')->returns(1)->once;
+            ok !$tank->go_to_tanks_position;
+        };
     };
     
-    it 'метод go_to_tanks_position, объект уже уничтожен.' => sub {
-        
-        $tank->expects('is_destroyed')->returns(1)->once;
-        ok !$tank->go_to_tanks_position;
-    };
-    
-    it 'метод get_damage, критическое попадание.' => sub {
+    it 'при вызове метода get_damage должно происходить уничтожение объекта при критическом попадании.' => sub {
         
         $tank->expects('is_destroyed')->returns(0)->once;
         $tank->expects('durability')->returns(1)->exactly(3);
@@ -210,7 +214,7 @@ describe 'Тест класса Tank' => sub {
     };
 };
 
-describe 'Тест роли Mobile,' => sub {
+describe 'Объект с ролью Mobile' => sub {
 
     use Vehicle::Artillery;
     use Vehicle::Avia;
@@ -220,27 +224,27 @@ describe 'Тест роли Mobile,' => sub {
     my $mobile_fly  = bless {}, 'Avia';
     my $mobile_sail = bless {}, 'Ship';
     
-    describe 'метод move,' => sub {
+    describe 'метод move' => sub {
         
-        it 'объект еще активен.' => sub {
+        it 'должен выполняться, если объект еще активен.' => sub {
             $mobile_move->expects('is_destroyed')->returns(0)->once;
             ok $mobile_move->move;
         };
         
-        it 'объект уже уничтожен.' => sub {
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
             $mobile_move->expects('is_destroyed')->returns(1)->once;
             ok !$mobile_move->move;
         };
     };
     
-    describe 'метод fly,' => sub {
+    describe 'метод fly' => sub {
         
-        it 'объект еще активен.' => sub {
+        it 'должен выполняться, если объект еще активен.' => sub {
             $mobile_fly->expects('is_destroyed')->returns(0)->once;
             ok $mobile_fly->fly;
         };
         
-        it 'объект уже уничтожен.' => sub {
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
             $mobile_fly->expects('is_destroyed')->returns(1)->once;
             ok !$mobile_fly->fly;
         };
@@ -248,32 +252,32 @@ describe 'Тест роли Mobile,' => sub {
     
     describe 'метод sail,' => sub {
         
-        it 'объект еще активен.' => sub {
+        it 'должен выполняться, если объект еще активен.' => sub {
             $mobile_sail->expects('is_destroyed')->returns(0)->once;
             ok $mobile_sail->sail;
         };
         
-        it 'объект уже уничтожен.' => sub {
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
             $mobile_sail->expects('is_destroyed')->returns(1)->once;
             ok !$mobile_sail->sail;
         };
     };
 };
 
-describe 'Тест роли Reloadable,' => sub {
+describe 'Оружие с ролью Reloadable' => sub {
     
     use Weapon::Cannon;
     
     my $reloadable = bless {}, 'Cannon';
     
-    describe 'метод shot,' => sub {
+    describe 'метод shot' => sub {
 
-        it 'объект уже уничтожен.' => sub {
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
             $reloadable->expects('is_destroyed')->returns(1)->exactly(2);
             ok !$reloadable->shot;
         };
         
-        it 'объект еще активен, оружие не заряжено, перезарядка невозможна.' => sub {
+        it 'не должен выполняться, если оружие не заряжено и перезарядка невозможна.' => sub {
             
             $reloadable->expects('is_destroyed')->returns(0)->once;
             $reloadable->expects('magazine_ammo')->returns(0)->exactly(2);
@@ -282,7 +286,7 @@ describe 'Тест роли Reloadable,' => sub {
             ok !$reloadable->shot;
         };
         
-        it 'объект еще активен, оружие не заряжено, перезарядка возможна.' => sub {
+        it 'не должен выполняться, если оружие не заряжено и перезарядка возможна.' => sub {
             
             $reloadable->expects('is_destroyed')->returns(0)->once;
             $reloadable->expects('magazine_ammo')->returns(0)->exactly(2);
@@ -291,7 +295,7 @@ describe 'Тест роли Reloadable,' => sub {
             ok !$reloadable->shot;
         };
         
-        it 'объект еще активен, оружие заряжено.' => sub {
+        it 'должен уменьшать заряды в магазине, если оружие заряжено.' => sub {
             
             $reloadable->expects('is_destroyed')->returns(0)->once;
             $reloadable->expects('magazine_ammo')->returns(1)->exactly(4);
@@ -300,14 +304,14 @@ describe 'Тест роли Reloadable,' => sub {
         };
     };
     
-    describe 'метод reload,' => sub {
+    describe 'метод reload' => sub {
 
-        it 'объект уже уничтожен.' => sub {
+        it 'не должен выполняться, если объект уже уничтожен.' => sub {
             $reloadable->expects('is_destroyed')->returns(1)->once;
             ok !$reloadable->reload;
         };
         
-        it 'объект еще активен, боезапас пуст.' => sub {
+        it 'не должен выполняться, если боезапас пуст.' => sub {
             
             $reloadable->expects('is_destroyed')->returns(0)->once;
             $reloadable->expects('ammo_count')->returns(0)->once;
@@ -315,7 +319,7 @@ describe 'Тест роли Reloadable,' => sub {
             ok !$reloadable->reload;
         };
         
-        it 'объект еще активен, боеприпасов на полный перезаряд достаточно.' => sub {
+        it 'должен производить полный перезаряд, если боеприпасов на полный перезаряд достаточно.' => sub {
             
             $reloadable->expects('is_destroyed')->returns(0)->once;
             $reloadable->expects('ammo_count')->returns(10)->exactly(4);
@@ -325,7 +329,7 @@ describe 'Тест роли Reloadable,' => sub {
             ok $reloadable->reload;
         };
         
-        it 'объект еще активен, боеприпасов на полный перезаряд недостаточно.' => sub {
+        it 'должен производить частичный перезаряд, если боеприпасов на полный перезаряд недостаточно.' => sub {
             
             $reloadable->expects('is_destroyed')->returns(0)->once;
             $reloadable->expects('ammo_count')->returns(5)->exactly(6);
