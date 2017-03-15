@@ -118,7 +118,7 @@ describe 'Объект класса Artillery' => sub {
         $artillery->expects('is_get_critical_damage')->returns(1)->once;
         $artillery->expects('destroy')->returns(1)->once;
 
-        $artillery->get_damage(1);
+        ok $artillery->get_damage(1);
 
         ok $artillery->{durability} == 99;
     };
@@ -151,7 +151,7 @@ describe 'Объект класса Avia' => sub {
         $avia->expects('is_get_critical_damage')->returns(1)->once;
         $avia->expects('destroy')->returns(1)->once;
 
-        $avia->get_damage(1);
+        ok $avia->get_damage(1);
 
         ok $avia->{durability} = 99;
     };
@@ -184,7 +184,7 @@ describe 'Объект класса Ship' => sub {
         $ship->expects('is_get_critical_damage')->returns(1)->once;
         $ship->expects('destroy')->returns(1)->once;
 
-        $ship->get_damage(1);
+        ok $ship->get_damage(1);
 
         ok $ship->{durability} == 99;
     };
@@ -217,7 +217,7 @@ describe 'Объект класса Tank' => sub {
         $tank->expects('is_get_critical_damage')->returns(1)->once;
         $tank->expects('destroy')->returns(1)->once;
 
-        $tank->get_damage(1);
+        ok $tank->get_damage(1);
 
         ok $tank->{durability} == 99;
     };
@@ -314,7 +314,7 @@ describe 'Оружие с ролью Reloadable' => sub {
         };
 
         it 'должен уменьшать заряды в магазине, если оружие заряжено.' => sub {
-            $reloadable->shot;
+            ok $reloadable->shot;
             ok $reloadable->{magazine_ammo} == 49;
         };
     };
@@ -332,12 +332,12 @@ describe 'Оружие с ролью Reloadable' => sub {
         };
 
         it 'должен производить полный перезаряд, если боеприпасов на полный перезаряд достаточно.' => sub {
-            $reloadable->reload;
+            ok $reloadable->reload;
             ok ( $reloadable->{magazine_ammo} == 50 && $reloadable->{ammo_count} == 5 );
         };
 
         it 'должен производить частичный перезаряд, если боеприпасов на полный перезаряд недостаточно.' => sub {
-            $reloadable->reload;
+            ok $reloadable->reload;
             ok ( $reloadable->{magazine_ammo} == 5 && $reloadable->{ammo_count} == 0 );
         };
     };
