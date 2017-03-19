@@ -1,6 +1,8 @@
 # класс танковая техника
 package Tank;
 
+use Modern::Perl;
+
 use Moose;
 extends 'Vehicle';
 with 'Mobile';
@@ -18,12 +20,25 @@ has 'machine_gun' => (
     handles => { fire_machinegun => 'shot' }
 );
 
+# если объект уничтожен выходим со статусом "ноль"
+around 'go_to_tanks_position' => sub {
+    my $orig = shift;
+    my $self = shift;
+    
+    if ( $self->is_destroyed ) {
+        say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+    
+    $self->$orig;
+};
+
 # расcчет критического попадания после получения урона
 after 'get_damage' => sub {
     my ( $self ) = @_;
     
     if ( $self->is_get_critical_damage ) {  
-        print 'Сдетонировал боекомплект!';
+        say '[Сдетонировал боекомплект!]';
         $self->destroy;
     }
 };
@@ -32,7 +47,7 @@ after 'get_damage' => sub {
 after 'fly' => sub {
     my ( $self ) = @_;
     
-    print 'снесло ветром :)!';
+    say '[снесло ветром :)!]';
     $self->destroy;
 };
 
@@ -40,8 +55,16 @@ after 'fly' => sub {
 after 'sail' => sub {
     my ( $self ) = @_;
     
-    print 'утонул!';
+    say '[утонул!]';
     $self->destroy;
+};
+
+# после уничтожения техники, уничтожаем оружие
+after 'destroy' => sub {
+    my ( $self ) = @_;
+    
+    $self->main_cannon->is_destroyed('1');
+    $self->machine_gun->is_destroyed('1');
 };
 
 # после создания выходим на позицию
@@ -51,7 +74,7 @@ sub BUILD {
 };
 
 sub go_to_tanks_position {
-    print 'вышел на позицию';
+    say '[вышел на позицию]';
     return 1;
 };
 

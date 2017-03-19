@@ -1,7 +1,10 @@
 # логика перезарядки магазина
 package Reloadable;
 
+use Modern::Perl;
 use Moose::Role;
+
+use Data::Dumper;
 
 has 'magazine_size' => (
     is      => 'ro',
@@ -21,18 +24,38 @@ sub BUILD {
     $self->reload;
 };
 
+# если объект уничтожен выходим со статусом "ноль"
+around [qw( shot reload )] => sub {
+    my $orig = shift;
+    my $self = shift;
+
+    if ( $self->is_destroyed ) {
+        say '[действие невозможно, объект уничтожен!]';
+        return 0;
+    }
+    
+    $self->$orig(@_);
+};
+
+# после выстрела пытаемся перезарядиться если оружие не заряжено
+after 'shot' => sub {
+    my ( $self ) = @_;
+    
+    return ( !$self->magazine_ammo && !$self->reload ) ? 0 : 1;
+};
+
 # переопределяем метод выстрела
 sub shot {
     my ( $self ) = @_;
     
     # если оружие не заряжено, выходим с ошибкой
     if ( $self->magazine_ammo == 0 ) {
-        print 'оружие не заряжено!';
+        say '[оружие не заряжено!]';
         return 0;
     }
     
     $self->magazine_ammo( $self->magazine_ammo - 1 );
-    print 'выстрелил';
+    say '[выстрелил]';
     return 1;
 }
 
@@ -41,7 +64,7 @@ sub reload {
     
     # возвращаем ноль если боезапас пуст
     if ( $self->ammo_count == 0 ) {
-        print 'кончился боезапас!';
+        say '[кончился боезапас!]';
         return 0;
     }
     
@@ -49,14 +72,14 @@ sub reload {
     if ( $self->ammo_count >= $self->magazine_size ) {
         $self->ammo_count( $self->ammo_count - $self->magazine_size );
         $self->magazine_ammo( $self->magazine_size );
-        print 'перезарядил полный';
+        say '[перезарядил полный]';
         return 1;
     }
     
     # заряжаем неполный магазин если боеприпасов меньше чем размер магазина
     elsif ( $self->ammo_count < $self->magazine_size ) {
         $self->magazine_ammo( $self->ammo_count );
-        print 'перезарядил только ' . $self->ammo_count;
+        say '[перезарядил только ' . $self->ammo_count . ' ]';
         $self->ammo_count(0);
         return 1;
     }
