@@ -39,13 +39,19 @@ describe 'Объект класса Vehicle' => sub {
         };
 
         it 'должен только уменьшать прочность, если повреждений наносится меньше чем текущая прочность.' => sub {
+
+            my $required_durability = $vehicle->{durability} - 1;
+
             $vehicle->get_damage(1);
-            ok $vehicle->{durability} == 99;
+            ok $vehicle->{durability} == $required_durability;
         };
 
         it 'должен уменьшать прочность и уничтожать объект, если повреждений наносится больше чем текущая прочность или столько-же.' => sub {
+
+            my $current_durability = $vehicle->{durability};
+
             $vehicle->expects('destroy')->returns(1)->once;
-            ok $vehicle->get_damage(99);
+            ok $vehicle->get_damage($current_durability);
         };
     };
 };
@@ -85,8 +91,11 @@ describe 'Объект класса Weapon' => sub {
         };
         
         it 'должен уменьшать боезапас, если боезапас не пуст.' => sub {
+
+            my $required_ammo_count = $weapon->{ammo_count} - 1;
+
             $weapon->shot;
-            ok $weapon->{ammo_count} == 99;
+            ok $weapon->{ammo_count} == $required_ammo_count;
         };
     };
 };
@@ -115,12 +124,14 @@ describe 'Объект класса Artillery' => sub {
 
     it 'при вызове метода get_damage должно происходить уничтожение объекта при критическом попадании.' => sub {
 
+        my $required_durability = $artillery->{durability} - 1;
+
         $artillery->expects('is_get_critical_damage')->returns(1)->once;
         $artillery->expects('destroy')->returns(1)->once;
 
         ok $artillery->get_damage(1);
 
-        ok $artillery->{durability} == 99;
+        ok $artillery->{durability} == $required_durability;
     };
 };
 
@@ -148,12 +159,14 @@ describe 'Объект класса Avia' => sub {
 
     it 'при вызове метода get_damage должно происходить уничтожение объекта при критическом попадании.' => sub {
 
+        my $required_durability = $avia->{durability} - 1;
+
         $avia->expects('is_get_critical_damage')->returns(1)->once;
         $avia->expects('destroy')->returns(1)->once;
 
         ok $avia->get_damage(1);
 
-        ok $avia->{durability} = 99;
+        ok $avia->{durability} = $required_durability;
     };
 };
 
@@ -181,12 +194,14 @@ describe 'Объект класса Ship' => sub {
 
     it 'при вызове метода get_damage должно происходить уничтожение объекта при критическом попадании.' => sub {
 
+        my $required_durability = $ship->{durability} - 1;
+
         $ship->expects('is_get_critical_damage')->returns(1)->once;
         $ship->expects('destroy')->returns(1)->once;
 
         ok $ship->get_damage(1);
 
-        ok $ship->{durability} == 99;
+        ok $ship->{durability} == $required_durability;
     };
 };
 
@@ -214,12 +229,14 @@ describe 'Объект класса Tank' => sub {
 
     it 'при вызове метода get_damage должно происходить уничтожение объекта при критическом попадании.' => sub {
 
+        my $required_durability = $tank->{durability} - 1;
+
         $tank->expects('is_get_critical_damage')->returns(1)->once;
         $tank->expects('destroy')->returns(1)->once;
 
         ok $tank->get_damage(1);
 
-        ok $tank->{durability} == 99;
+        ok $tank->{durability} == $required_durability;
     };
 };
 
@@ -314,8 +331,11 @@ describe 'Оружие с ролью Reloadable' => sub {
         };
 
         it 'должен уменьшать заряды в магазине, если оружие заряжено.' => sub {
+
+            my $required_magazine_ammo_after_shot = $reloadable->{magazine_ammo} - 1;
+
             ok $reloadable->shot;
-            ok $reloadable->{magazine_ammo} == 49;
+            ok $reloadable->{magazine_ammo} == $required_magazine_ammo_after_shot;
         };
     };
 
@@ -332,13 +352,19 @@ describe 'Оружие с ролью Reloadable' => sub {
         };
 
         it 'должен производить полный перезаряд, если боеприпасов на полный перезаряд достаточно.' => sub {
+
+            my $required_ammo_count_after_reload = $reloadable->{ammo_count} - $reloadable->{magazine_size};
+
             ok $reloadable->reload;
-            ok ( $reloadable->{magazine_ammo} == 50 && $reloadable->{ammo_count} == 5 );
+            ok ( $reloadable->{magazine_ammo} == $reloadable->{magazine_size} && $reloadable->{ammo_count} == $required_ammo_count_after_reload );
         };
 
         it 'должен производить частичный перезаряд, если боеприпасов на полный перезаряд недостаточно.' => sub {
+
+            my $required_magazine_size_after_reload = $reloadable->{ammo_count};
+
             ok $reloadable->reload;
-            ok ( $reloadable->{magazine_ammo} == 5 && $reloadable->{ammo_count} == 0 );
+            ok ( $reloadable->{magazine_ammo} == $required_magazine_size_after_reload && $reloadable->{ammo_count} == 0 );
         };
     };
 };
